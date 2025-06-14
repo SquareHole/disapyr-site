@@ -1,5 +1,6 @@
 [build]
-  publish = "site/.next"
+  base = "site"
+  publish = ".next"
   command = "npm run build"
 
 [site]
