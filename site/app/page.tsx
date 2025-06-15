@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -138,9 +139,9 @@ export default function Home() {
           <p>
             Your text is encrypted and automatically deleted after being viewed once.
             <br />
-            <a href="#" onClick={(e) => e.preventDefault()}>
+            <Link href="/about">
               Learn more about our security
-            </a>
+            </Link>
           </p>
         </footer>
       </main>
