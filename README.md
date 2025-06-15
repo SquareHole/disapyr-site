@@ -1,4 +1,228 @@
-# disapyr-site
+# disapyr.link
 
-## Deployment Status
+**A secure, one-time text sharing service with military-grade encryption**
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/82fe5400-4c6f-4e16-b3d9-9295164144f9/deploy-status)](https://app.netlify.com/projects/disapyr-link/deploys)
+
+## 🔒 What is disapyr.link?
+
+disapyr.link is a secure text sharing service that allows you to share sensitive information through self-destructing, encrypted links. Perfect for sharing passwords, API keys, confidential notes, or any sensitive text that should only be viewed once.
+
+### Key Features
+
+- **🔐 Military-Grade Encryption**: AES-256-GCM encryption with unique initialization vectors
+- **👁️ One-Time Access**: Secrets are permanently deleted after being viewed once
+- **⏰ Automatic Expiration**: Configurable expiration (1-365 days, default 21 days)
+- **🚫 Zero Knowledge**: We cannot read your secrets - they're encrypted before storage
+- **📱 Mobile Friendly**: Responsive design works on all devices
+- **🌙 Dark Mode**: Beautiful dark/light theme support
+
+## 🚀 Live Demo
+
+Visit [disapyr.link](https://disapyr.link) to try it out!
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **Next.js 15+** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **CSS Modules** - Scoped styling with custom properties
+- **React 19** - Modern React features
+
+### Backend
+- **Netlify Functions** - Serverless API endpoints
+- **Neon Postgres** - Cloud-hosted PostgreSQL database
+- **Node.js Crypto** - Built-in encryption/decryption
+
+### Security
+- **AES-256-GCM** encryption algorithm
+- **scrypt** key derivation function
+- **Secure deletion** after retrieval
+- **Environment-based encryption keys**
+
+## 🏗️ Project Structure
+
+```
+├── site/
+│   ├── app/
+│   │   ├── page.tsx              # Main landing page
+│   │   ├── layout.tsx            # Root layout
+│   │   ├── globals.css           # Global styles
+│   │   ├── about/
+│   │   │   └── page.tsx          # Security information page
+│   │   └── secret/[key]/
+│   │       └── page.tsx          # Secret viewing page
+│   ├── netlify/functions/
+│   │   ├── createSecret.js       # API: Create encrypted secret
+│   │   └── getSecret.js          # API: Retrieve and delete secret
+│   ├── package.json
+│   └── next.config.ts
+├── netlify.toml                  # Netlify configuration
+└── README.md
+```
+
+## 🔧 Development Setup
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- Netlify account (for deployment)
+- Neon database (for production)
+
+### Local Development
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/disapyr-site.git
+   cd disapyr-site/site
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create `site/.env.local`:
+   ```bash
+   NETLIFY_ENCRYPTION_KEY=your-64-character-encryption-key
+   NETLIFY_DATABASE_URL=your-neon-database-connection-string
+   ```
+
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Access the application**
+   Open [http://localhost:3000](http://localhost:3000)
+
+### Database Setup
+
+The application requires a PostgreSQL table with the following schema:
+
+```sql
+CREATE TABLE secrets (
+    id SERIAL PRIMARY KEY,
+    key UUID UNIQUE NOT NULL,
+    secret TEXT,
+    retrieved_at TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 🚀 Deployment
+
+### Netlify Deployment
+
+1. **Fork/clone this repository**
+
+2. **Connect to Netlify**
+   - Import your repository in Netlify
+   - Set build directory to `site`
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+
+3. **Configure environment variables**
+   In Netlify dashboard → Site settings → Environment variables:
+   ```
+   NETLIFY_ENCRYPTION_KEY=your-64-character-encryption-key
+   NETLIFY_DATABASE_URL=your-neon-database-connection-string
+   ```
+
+4. **Deploy**
+   - Netlify will automatically deploy on git push
+   - Functions will be available at `/.netlify/functions/`
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NETLIFY_ENCRYPTION_KEY` | 64-character hex string for AES encryption | Yes |
+| `NETLIFY_DATABASE_URL` | Neon PostgreSQL connection string | Yes |
+
+## 🔐 Security Implementation
+
+### Encryption Process
+
+1. **Text Input**: User enters sensitive text
+2. **Key Derivation**: scrypt derives encryption key from master key + salt
+3. **Encryption**: AES-256-GCM encrypts text with unique IV
+4. **Storage**: Only encrypted data stored in database
+5. **Retrieval**: Text decrypted on-demand and immediately deleted
+
+### Security Features
+
+- **Zero Knowledge Architecture**: Server cannot read plaintext secrets
+- **Perfect Forward Secrecy**: Each secret uses unique encryption parameters
+- **Secure Deletion**: Overwritten with NULL after retrieval
+- **Time-based Expiration**: Automatic cleanup of expired secrets
+- **Input Validation**: Length limits and sanitization
+- **Error Handling**: No information leakage in error messages
+
+## 📝 API Documentation
+
+### Create Secret
+```
+POST /.netlify/functions/createSecret
+Content-Type: application/json
+
+{
+  "secret": "Your sensitive text here",
+  "expiryDays": 21
+}
+```
+
+**Response:**
+```json
+{
+  "key": "uuid-v4-key",
+  "expires_at": "2024-01-15T10:30:00Z",
+  "message": "Secret created successfully"
+}
+```
+
+### Retrieve Secret
+```
+GET /.netlify/functions/getSecret?key=uuid-v4-key
+```
+
+**Response:**
+```json
+{
+  "key": "uuid-v4-key",
+  "secret": "Your sensitive text here",
+  "retrieved_at": "2024-01-01T10:30:00Z"
+}
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes
+4. Add tests if applicable
+5. Commit: `git commit -am 'Add feature'`
+6. Push: `git push origin feature-name`
+7. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) file for details.
+
+## 🛡️ Security
+
+If you discover a security vulnerability, please send an email to security@disapyr.link instead of creating a public issue.
+
+## 📞 Support
+
+- **Documentation**: Check the `/about` page for detailed security information
+- **Issues**: Create an issue on GitHub for bug reports
+- **Questions**: Discussion tab for general questions
+
+---
+
+**Built with ❤️ for secure communication**
