@@ -2,19 +2,32 @@
 
 ## Environment Variable Setup
 
-To connect your Netlify function to your Neon Postgres database, you need to set up the `NETLIFY_DATABASE_URL` environment variable.
+To connect your Netlify function to your Neon Postgres database and enable encryption, you need to set up the following environment variables.
 
 ### In Netlify Dashboard:
 1. Go to your Netlify site dashboard
 2. Navigate to Site settings > Environment variables
-3. Add a new environment variable:
+3. Add the following environment variables:
    - **Key**: `NETLIFY_DATABASE_URL`
    - **Value**: Your Neon database connection string (should look like: `postgresql://username:password@host/database`)
+   - **Key**: `NETLIFY_ENCRYPTION_KEY`
+   - **Value**: A strong encryption key (minimum 32 characters, use a random string generator)
 
 ### For Local Development:
 Create a `.env.local` file in the `site/` directory:
 ```
 NETLIFY_DATABASE_URL=postgresql://username:password@host/database
+NETLIFY_ENCRYPTION_KEY=your-strong-encryption-key-here-minimum-32-chars
+```
+
+### Generating an Encryption Key:
+You can generate a secure encryption key using:
+```bash
+# Using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+# Using OpenSSL
+openssl rand -hex 32
 ```
 
 ## Function Usage
@@ -115,10 +128,29 @@ Content-Type: application/json
 
 ## Function Behavior
 
-1. **Retrieval Logic**: Only retrieves secrets where `retrieved_at` is NULL
-2. **Expiration Check**: Automatically checks if the secret has expired based on `expires_at`
-3. **Timestamp Update**: Updates `retrieved_at` to current timestamp when accessed
-4. **One-time Access**: Once retrieved, the secret cannot be accessed again (retrieved_at is no longer NULL)
+1. **Encryption**: All secrets are encrypted using AES-256-GCM before storage
+2. **Retrieval Logic**: Only retrieves secrets where `retrieved_at` is NULL and secret content exists
+3. **Expiration Check**: Automatically checks if the secret has expired based on `expires_at`
+4. **Decryption**: Secrets are decrypted during retrieval using the encryption key
+5. **Timestamp Update**: Updates `retrieved_at` to current timestamp when accessed
+6. **Secret Clearing**: Secret content is permanently deleted from database after retrieval
+7. **One-time Access**: Once retrieved, the secret cannot be accessed again (content is NULL)
+
+## Security Features
+
+### Encryption at Rest
+- Secrets are encrypted using AES-256-GCM encryption before being stored in the database
+- Each secret uses a unique initialization vector (IV) for maximum security
+- Encryption key is stored separately in environment variables, not in the database
+
+### Secure Deletion
+- After a secret is retrieved, the encrypted content is permanently deleted from the database
+- Only metadata (key, timestamps) remains, making the secret completely inaccessible
+- Even direct database access cannot reveal secret content after retrieval
+
+### Key Derivation
+- Encryption keys are derived using scrypt with a salt for additional security
+- This prevents rainbow table attacks and adds computational cost to brute force attempts
 
 ## Testing
 

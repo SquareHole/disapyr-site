@@ -1,4 +1,24 @@
 import { neon } from '@netlify/neon';
+import { createDecipherGCM, scryptSync } from 'crypto';
+
+// Decryption function
+function decryptSecret(encryptedData, encryptionKey) {
+  try {
+    const { encrypted, iv, authTag } = encryptedData;
+    
+    const key = scryptSync(encryptionKey, 'disapyr-salt', 32); // Derive key from password
+    const decipher = createDecipherGCM('aes-256-gcm', key, Buffer.from(iv, 'hex'));
+    decipher.setAuthTag(Buffer.from(authTag, 'hex'));
+    
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    
+    return decrypted;
+  } catch (error) {
+    console.error('Decryption error:', error);
+    throw new Error('Failed to decrypt secret');
+  }
+}
 
 export default async (req, context) => {
   // Only allow GET requests
@@ -21,6 +41,16 @@ export default async (req, context) => {
       });
     }
 
+    // Check for encryption key
+    const encryptionKey = process.env.NETLIFY_ENCRYPTION_KEY;
+    if (!encryptionKey) {
+      console.error('NETLIFY_ENCRYPTION_KEY environment variable not set');
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     // Initialize Neon connection (automatically uses NETLIFY_DATABASE_URL)
     const sql = neon();
 
@@ -28,7 +58,7 @@ export default async (req, context) => {
     const [secret] = await sql`
       SELECT key, secret, expires_at, retrieved_at 
       FROM secrets 
-      WHERE key = ${key} AND retrieved_at IS NULL
+      WHERE key = ${key} AND retrieved_at IS NULL AND secret IS NOT NULL
     `;
 
     if (!secret) {
@@ -47,17 +77,30 @@ export default async (req, context) => {
       });
     }
 
-    // Update the retrieved_at timestamp
+    // Decrypt the secret
+    let decryptedSecret;
+    try {
+      const encryptedData = JSON.parse(secret.secret);
+      decryptedSecret = decryptSecret(encryptedData, encryptionKey);
+    } catch (error) {
+      console.error('Failed to decrypt secret:', error);
+      return new Response(JSON.stringify({ error: 'Failed to retrieve secret' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Update the retrieved_at timestamp and clear the secret from database
     await sql`
       UPDATE secrets 
-      SET retrieved_at = ${now.toISOString()} 
+      SET retrieved_at = ${now.toISOString()}, secret = NULL
       WHERE key = ${key}
     `;
 
-    // Return the secret
+    // Return the decrypted secret
     return new Response(JSON.stringify({ 
       key: secret.key,
-      secret: secret.secret,
+      secret: decryptedSecret,
       retrieved_at: now.toISOString()
     }), {
       status: 200,

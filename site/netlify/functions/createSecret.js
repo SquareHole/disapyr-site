@@ -1,5 +1,24 @@
 import { neon } from '@netlify/neon';
-import { randomUUID } from 'crypto';
+import { randomUUID, createCipherGCM, randomBytes, scryptSync } from 'crypto';
+
+// Encryption function
+function encryptSecret(text, encryptionKey) {
+  const iv = randomBytes(16); // Generate random IV
+  const key = scryptSync(encryptionKey, 'disapyr-salt', 32); // Derive key from password
+  const cipher = createCipherGCM('aes-256-gcm', key, iv);
+  
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  
+  const authTag = cipher.getAuthTag();
+  
+  // Return encrypted data with IV and auth tag
+  return {
+    encrypted: encrypted,
+    iv: iv.toString('hex'),
+    authTag: authTag.toString('hex')
+  };
+}
 
 export default async (req, context) => {
   // Only allow POST requests
@@ -30,6 +49,16 @@ export default async (req, context) => {
       });
     }
 
+    // Check for encryption key
+    const encryptionKey = process.env.NETLIFY_ENCRYPTION_KEY;
+    if (!encryptionKey) {
+      console.error('NETLIFY_ENCRYPTION_KEY environment variable not set');
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     // Generate a unique key
     const key = randomUUID();
 
@@ -37,13 +66,16 @@ export default async (req, context) => {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 21);
 
+    // Encrypt the secret
+    const encryptedData = encryptSecret(secret.trim(), encryptionKey);
+
     // Initialize Neon connection (automatically uses NETLIFY_DATABASE_URL)
     const sql = neon();
 
-    // Insert the secret into the database
+    // Insert the encrypted secret into the database
     await sql`
       INSERT INTO secrets (key, secret, retrieved_at, expires_at)
-      VALUES (${key}, ${secret.trim()}, NULL, ${expiresAt.toISOString()})
+      VALUES (${key}, ${JSON.stringify(encryptedData)}, NULL, ${expiresAt.toISOString()})
     `;
 
     // Return the generated key
