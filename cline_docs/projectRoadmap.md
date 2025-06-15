@@ -24,7 +24,7 @@
   - [x] Frontend-backend integration
   - [x] Secret creation functionality
   - [x] Modern UI for link generation and display
-  - [ ] Secret viewing page (/secret/[key] route)
+  - [x] Secret viewing page (/secret/[key] route)
   
 - **Phase 3 (Future)**: Advanced Features
   - [ ] Custom expiration times
@@ -47,3 +47,4 @@
 - [x] Integrated frontend with backend APIs
 - [x] Added modern UI for link generation and management
 - [x] Implemented one-time access and expiration features
+- [x] Created secret viewing page with dynamic routing
