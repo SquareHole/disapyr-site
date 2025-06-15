@@ -116,6 +116,112 @@
   color: var(--primary-hover);
 }
 
+/* Success Container Styles */
+.successContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  text-align: center;
+}
+
+.successTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.successSubtitle {
+  font-size: 1.1rem;
+  color: var(--secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.linkContainer {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  background: var(--input-bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.linkInput {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  font-family: monospace;
+  outline: none;
+}
+
+.copyButton {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.copyButton:hover {
+  background: var(--primary-hover);
+}
+
+.linkInfo {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.linkInfo p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.secondaryButton {
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.secondaryButton:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.error {
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -140,6 +246,24 @@
     padding: 0.875rem 1.5rem;
     font-size: 1rem;
   }
+
+  .successTitle {
+    font-size: 1.75rem;
+  }
+
+  .linkInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .linkContainer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .copyButton {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -153,5 +277,13 @@
   
   .textarea {
     min-height: 120px;
+  }
+
+  .successTitle {
+    font-size: 1.5rem;
+  }
+
+  .successSubtitle {
+    font-size: 1rem;
   }
 }

@@ -19,14 +19,30 @@ NETLIFY_DATABASE_URL=postgresql://username:password@host/database
 
 ## Function Usage
 
+### Get Secret Function
 The function is accessible at: `/.netlify/functions/getSecret`
 
-### API Endpoint:
+#### API Endpoint:
 ```
 GET /.netlify/functions/getSecret?key=YOUR_SECRET_KEY
 ```
 
+### Create Secret Function
+The function is accessible at: `/.netlify/functions/createSecret`
+
+#### API Endpoint:
+```
+POST /.netlify/functions/createSecret
+Content-Type: application/json
+
+{
+  "secret": "Your secret text here"
+}
+```
+
 ### Response Examples:
+
+#### Get Secret Responses:
 
 **Success (200):**
 ```json
@@ -58,10 +74,42 @@ GET /.netlify/functions/getSecret?key=YOUR_SECRET_KEY
 }
 ```
 
+#### Create Secret Responses:
+
+**Success (201):**
+```json
+{
+  "key": "generated-uuid-key",
+  "expires_at": "2025-07-06T17:20:00.000Z",
+  "message": "Secret created successfully"
+}
+```
+
+**Missing secret text (400):**
+```json
+{
+  "error": "Secret text is required"
+}
+```
+
+**Secret too long (400):**
+```json
+{
+  "error": "Secret text too long (max 10000 characters)"
+}
+```
+
 **Method not allowed (405):**
 ```json
 {
   "error": "Method not allowed"
+}
+```
+
+**Internal server error (500):**
+```json
+{
+  "error": "Internal server error"
 }
 ```
 
