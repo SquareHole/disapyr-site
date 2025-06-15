@@ -2,6 +2,7 @@
   base = "site"
   publish = ".next"
   command = "npm run build"
+  functions = "netlify/functions"
 
 [site]
   name = "disapyr-link"

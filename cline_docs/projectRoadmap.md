@@ -15,10 +15,13 @@
   - [x] Modern UI/UX design
   - [x] Responsive design
   
-- **Phase 2 (Future)**: Backend Integration
-  - [ ] One-time link generation
-  - [ ] Text storage and retrieval
-  - [ ] Link expiration handling
+- **Phase 2 (Current)**: Backend Integration
+  - [x] Database setup (Neon Postgres)
+  - [x] Netlify function for secret retrieval
+  - [x] One-time access implementation
+  - [x] Link expiration handling
+  - [ ] Frontend-backend integration
+  - [ ] Secret creation functionality
   
 - **Phase 3 (Future)**: Advanced Features
   - [ ] Custom expiration times

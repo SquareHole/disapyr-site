@@ -19,11 +19,16 @@
 - **Netlify**: Static site hosting (current setup)
 - **Vercel**: Alternative deployment option for Next.js
 
-## Future Backend Considerations
-- **Database**: TBD (likely PostgreSQL or MongoDB)
-- **API**: Next.js API routes or separate backend service
-- **Authentication**: TBD based on requirements
-- **Storage**: For temporary text storage and link management
+## Backend Implementation
+- **Database**: Neon Postgres (cloud-hosted PostgreSQL)
+- **API**: Netlify Functions (serverless functions)
+- **Database Connection**: @netlify/neon package
+- **Storage**: Postgres table for temporary secret storage and link management
+
+## Netlify Functions
+- **getSecret**: Retrieves secrets by key with one-time access
+- **Features**: Expiration checking, timestamp tracking, secure retrieval
+- **Environment**: NETLIFY_DATABASE_URL for database connection
 
 ## Design Principles
 - Modern, clean aesthetic

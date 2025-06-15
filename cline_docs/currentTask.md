@@ -1,37 +1,48 @@
-# Current Task: Modern Landing Page Implementation
+# Current Task: Backend Integration - Netlify Functions
 
 ## Current Objectives
-- Replace default Next.js page with modern disapyr.link landing page
-- Implement centered multiline textbox for user input
-- Create clean, modern design aesthetic
-- Ensure responsive layout
+- ✅ Implement Netlify function for secret retrieval from Neon Postgres database
+- Set up environment variables for database connection
+- Test the function locally and in production
+- Integrate frontend with backend API
 
 ## Context
 - Working with Next.js application in `/site` directory
-- Current page.tsx contains default Next.js boilerplate
-- Need to maintain existing project structure
-- Focus on frontend only (backend integration comes later)
+- Modern landing page already implemented
+- Added Netlify functions for backend functionality
+- Using Neon Postgres database for secret storage
+
+## Completed Steps
+1. ✅ Created Netlify functions directory structure
+2. ✅ Installed required dependencies (@netlify/neon, @netlify/functions)
+3. ✅ Implemented getSecret.js function with:
+   - Key-based secret retrieval
+   - Retrieved_at timestamp validation
+   - Expiration checking
+   - Automatic timestamp updates
+4. ✅ Updated netlify.toml configuration
+5. ✅ Created setup documentation
 
 ## Next Steps
-1. ✅ Update page.tsx with modern landing page design
-2. ✅ Update globals.css with improved styling
-3. ✅ Create custom CSS for the landing page components
-4. ⚠️ Test the implementation locally (Node.js required)
-5. ✅ Ensure responsive design works across devices
+1. Set up NETLIFY_DATABASE_URL environment variable
+2. Test the function locally with Netlify CLI
+3. Deploy to Netlify and test in production
+4. Integrate frontend form with the backend API
+5. Add error handling and user feedback
 
 ## Current Status
-- Modern landing page implemented with Next.js
-- HTML preview version created for immediate testing
-- Responsive design with dark/light mode support
-- Ready for backend integration
+- Backend function implemented and ready for testing
+- Database connection configured
+- Documentation provided for setup and testing
+- Ready for environment variable configuration and deployment
 
-## Node.js Installation Required
-The Next.js application requires Node.js to run. A preview.html file has been created to demonstrate the design.
+## Function Details
+- **Endpoint**: `/.netlify/functions/getSecret?key=SECRET_KEY`
+- **Method**: GET only
+- **Features**: One-time retrieval, expiration checking, timestamp tracking
+- **Database**: Neon Postgres with secrets table
 
-## Design Requirements
-- Site name: "disapyr.link"
-- Centered layout with multiline textbox
-- Modern, clean aesthetic
-- Placeholder text explaining the service
-- Submit button (non-functional for now)
-- Professional typography and spacing
+## Testing Requirements
+- Environment variable setup (NETLIFY_DATABASE_URL)
+- Test data in database
+- Netlify CLI for local testing

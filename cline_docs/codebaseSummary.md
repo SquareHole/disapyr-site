@@ -7,48 +7,59 @@ site/
 │   ├── favicon.ico
 │   ├── globals.css          # Global styles with dark/light mode
 │   ├── layout.tsx           # Root layout component
-│   ├── page.module.css      # Page-specific styles (to be updated)
-│   └── page.tsx             # Main landing page (to be updated)
+│   ├── page.module.css      # Page-specific styles
+│   └── page.tsx             # Main landing page
+├── netlify/
+│   └── functions/
+│       └── getSecret.js     # Netlify function for secret retrieval
 ├── public/                  # Static assets
 ├── next.config.ts           # Next.js configuration
-├── package.json             # Dependencies and scripts
+├── package.json             # Dependencies and scripts (includes @netlify/neon)
 └── tsconfig.json            # TypeScript configuration
 ```
 
 ## Key Components and Their Interactions
 
 ### Current State
-- **page.tsx**: Default Next.js boilerplate page (needs replacement)
+- **page.tsx**: Modern landing page implemented
 - **layout.tsx**: Root layout wrapper for all pages
-- **globals.css**: Basic styling with CSS custom properties for theming
+- **globals.css**: Enhanced styling with CSS custom properties for theming
+- **getSecret.js**: Netlify function for database secret retrieval
 
-### Planned Updates
-- **page.tsx**: Will become the main disapyr.link landing page
-- **page.module.css**: Will contain landing page specific styles
-- **globals.css**: Enhanced with modern design tokens
+### Backend Implementation
+- **Database**: Neon Postgres with secrets table
+- **API Function**: GET endpoint for secret retrieval by key
+- **Features**: One-time access, expiration checking, timestamp tracking
 
 ## Data Flow
-- Currently static Next.js application
-- Future: User input → text processing → one-time link generation
+- Frontend: User input → form submission → API call
+- Backend: API request → database query → secret retrieval → timestamp update
+- Response: Secret data or error message returned to frontend
 
 ## External Dependencies
 - Next.js framework
 - React
 - TypeScript
-- Standard Next.js build tools
+- @netlify/neon (database connection)
+- @netlify/functions (serverless functions)
+- Neon Postgres database (cloud-hosted)
 
 ## Recent Significant Changes
-- Created cline_docs documentation structure
-- Analyzed existing Next.js boilerplate
-- Planned modern landing page implementation
+- Implemented Netlify function for secret retrieval
+- Added database connectivity with Neon Postgres
+- Updated project configuration for functions
+- Created comprehensive setup documentation
+- Updated all project documentation
 
 ## User Feedback Integration
-- User requested modern landing page for disapyr.link
-- Centered multiline textbox for text sharing
-- Backend integration to be added later
-- Focus on clean, modern aesthetic
+- User requested backend integration with Postgres database
+- Implemented one-time secret retrieval functionality
+- Added expiration handling and timestamp tracking
+- Focus on secure, reliable database operations
 
 ## Next Development Phase
-- Replace default page with custom landing page
-- Implement responsive design
-- Prepare for backend integration
+- Set up environment variables for database connection
+- Test function locally and in production
+- Integrate frontend form with backend API
+- Add secret creation functionality
+- Implement error handling and user feedback
