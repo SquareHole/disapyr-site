@@ -1,5 +1,5 @@
 import { neon } from '@netlify/neon';
-import { createDecipherGCM, scryptSync } from 'crypto';
+import { createDecipheriv, scryptSync } from 'crypto';
 
 // Decryption function
 function decryptSecret(encryptedData, encryptionKey) {
@@ -7,7 +7,7 @@ function decryptSecret(encryptedData, encryptionKey) {
     const { encrypted, iv, authTag } = encryptedData;
     
     const key = scryptSync(encryptionKey, 'disapyr-salt', 32); // Derive key from password
-    const decipher = createDecipherGCM('aes-256-gcm', key, Buffer.from(iv, 'hex'));
+    const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(iv, 'hex'));
     decipher.setAuthTag(Buffer.from(authTag, 'hex'));
     
     let decrypted = decipher.update(encrypted, 'hex', 'utf8');

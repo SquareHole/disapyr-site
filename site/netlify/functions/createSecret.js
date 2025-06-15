@@ -1,11 +1,11 @@
 import { neon } from '@netlify/neon';
-import { randomUUID, createCipherGCM, randomBytes, scryptSync } from 'crypto';
+import { randomUUID, createCipheriv, randomBytes, scryptSync } from 'crypto';
 
 // Encryption function
 function encryptSecret(text, encryptionKey) {
   const iv = randomBytes(16); // Generate random IV
   const key = scryptSync(encryptionKey, 'disapyr-salt', 32); // Derive key from password
-  const cipher = createCipherGCM('aes-256-gcm', key, iv);
+  const cipher = createCipheriv('aes-256-gcm', key, iv);
   
   let encrypted = cipher.update(text, 'utf8', 'hex');
   encrypted += cipher.final('hex');
