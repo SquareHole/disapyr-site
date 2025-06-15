@@ -222,6 +222,49 @@
   text-align: center;
 }
 
+/* Expiry Selector Styles */
+.expiryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--input-bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.expiryLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+}
+
+.expiryInput {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.expiryInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.expiryHint {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {

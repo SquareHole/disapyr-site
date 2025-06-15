@@ -6,6 +6,7 @@ import styles from './page.module.css';
 
 export default function Home() {
   const [text, setText] = useState('');
+  const [expiryDays, setExpiryDays] = useState(21);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
   const [error, setError] = useState('');
@@ -25,7 +26,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ secret: text }),
+        body: JSON.stringify({ secret: text, expiryDays: expiryDays }),
       });
 
       const data = await response.json();
@@ -84,6 +85,22 @@ export default function Home() {
                 maxLength={10000}
               />
             </div>
+
+            <div className={styles.expiryContainer}>
+              <label htmlFor="expiryDays" className={styles.expiryLabel}>
+                Expires after (days):
+              </label>
+              <input
+                id="expiryDays"
+                type="number"
+                min="1"
+                max="365"
+                value={expiryDays}
+                onChange={(e) => setExpiryDays(Math.min(Math.max(parseInt(e.target.value) || 1, 1), 365))}
+                className={styles.expiryInput}
+              />
+              <span className={styles.expiryHint}>Between 1 and 365 days</span>
+            </div>
             
             <button 
               type="submit" 
@@ -122,7 +139,7 @@ export default function Home() {
             </div>
             
             <div className={styles.linkInfo}>
-              <p>🔒 This link expires in 21 days</p>
+              <p>🔒 This link expires in {expiryDays} {expiryDays === 1 ? 'day' : 'days'}</p>
               <p>👁️ Can only be viewed once</p>
             </div>
             

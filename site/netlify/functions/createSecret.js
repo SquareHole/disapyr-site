@@ -32,7 +32,7 @@ export default async (req, context) => {
   try {
     // Parse the request body
     const body = await req.json();
-    const { secret } = body;
+    const { secret, expiryDays } = body;
 
     if (!secret || !secret.trim()) {
       return new Response(JSON.stringify({ error: 'Secret text is required' }), {
@@ -49,6 +49,9 @@ export default async (req, context) => {
       });
     }
 
+    // Validate and sanitize expiry days (default to 21, min 1, max 365)
+    const validExpiryDays = expiryDays ? Math.min(Math.max(parseInt(expiryDays), 1), 365) : 21;
+
     // Check for encryption key
     const encryptionKey = process.env.NETLIFY_ENCRYPTION_KEY;
     if (!encryptionKey) {
@@ -62,9 +65,9 @@ export default async (req, context) => {
     // Generate a unique key
     const key = randomUUID();
 
-    // Calculate expiration date (21 days from now)
+    // Calculate expiration date using the provided expiry days
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 21);
+    expiresAt.setDate(expiresAt.getDate() + validExpiryDays);
 
     // Encrypt the secret
     const encryptedData = encryptSecret(secret.trim(), encryptionKey);
