@@ -14,7 +14,12 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!text.trim()) return;
+    
+    // Add form validation
+    if (!text.trim()) {
+      setError('Please enter text to create a secure link');
+      return;
+    }
     
     setIsLoading(true);
     setError('');
@@ -69,10 +74,15 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>disapyr.link</h1>
-        <p className={styles.subtitle}>
-          Share text securely with one-time links that disappear after being viewed
-        </p>
+        <div className={styles.header}>
+          <div className={styles.titleContainer}>
+            <div className={styles.logoIcon}>🔒</div>
+            <h1 className={styles.title}>disapyr.link</h1>
+          </div>
+          <p className={styles.subtitle}>
+            Share text securely with one-time links that disappear after being viewed
+          </p>
+        </div>
         
         {!generatedLink ? (
           <form className={styles.form} onSubmit={handleSubmit}>
@@ -105,7 +115,7 @@ export default function Home() {
             <button 
               type="submit" 
               className={styles.button}
-              disabled={!text.trim() || isLoading}
+              disabled={isLoading}
             >
               {isLoading ? 'Creating Link...' : 'Create Secure Link'}
             </button>
@@ -149,6 +159,13 @@ export default function Home() {
             >
               Create Another Link
             </button>
+          </div>
+        )}
+        
+        {/* Toast notification for copy success */}
+        {copySuccess && (
+          <div className={styles.toast}>
+            ✅ Link copied to clipboard!
           </div>
         )}
         

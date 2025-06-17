@@ -4,8 +4,10 @@
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --secondary: #64748b;
+  --accent: #a855f7;
   --border: #e2e8f0;
   --input-bg: #ffffff;
+  --placeholder: #94a3b8;
   --shadow: rgba(0, 0, 0, 0.1);
   --shadow-lg: rgba(0, 0, 0, 0.15);
 }
@@ -17,8 +19,10 @@
     --primary: #3b82f6;
     --primary-hover: #2563eb;
     --secondary: #94a3b8;
+    --accent: #a855f7;
     --border: #334155;
     --input-bg: #1e293b;
+    --placeholder: #64748b;
     --shadow: rgba(0, 0, 0, 0.3);
     --shadow-lg: rgba(0, 0, 0, 0.4);
   }
