@@ -4,7 +4,7 @@ const securityHeaders = [
   {
     key: 'Content-Security-Policy',
     value:
-      "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none';",
+      "default-src 'self'; script-src 'self' ; object-src 'none'; base-uri 'none'; frame-ancestors 'none';",
   },
 ];
 
