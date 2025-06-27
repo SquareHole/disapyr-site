@@ -40,8 +40,6 @@ describe('getSecret', () => {
       method: 'GET',
       url: 'http://localhost/.netlify/functions/getSecret?key=test-key',
     };
-    const context = {};
-
     const response = await getSecret(req);
     const data = await response.json();
 

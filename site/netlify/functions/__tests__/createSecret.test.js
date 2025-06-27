@@ -17,8 +17,6 @@ describe('createSecret', () => {
       body: JSON.stringify({ secret: 'test secret' }),
       json: async () => ({ secret: 'test secret' }),
     };
-    const context = {};
-
     const response = await createSecret(req);
 
     expect(response.status).toBe(201);
