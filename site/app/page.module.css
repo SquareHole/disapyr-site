@@ -9,11 +9,7 @@
   background-image: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
 }
 
-.main {
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-}
+/* Main container is now defined in Layout.module.css */
 
 .header {
   margin-bottom: clamp(2rem, 6vw, 3rem);
@@ -56,10 +52,14 @@
   flex-direction: column;
   gap: clamp(1rem, 3vw, 1.5rem);
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .textareaContainer {
   position: relative;
+  width: 100%;
+  max-width: 600px;
 }
 
 .textarea {
@@ -187,6 +187,7 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+  max-width: 600px;
   text-align: center;
 }
 

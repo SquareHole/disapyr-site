@@ -1,5 +1,8 @@
 .container {
   padding: 0 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .main {
@@ -10,6 +13,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 600px;
+  width: 100%;
 }
 
 .header {
