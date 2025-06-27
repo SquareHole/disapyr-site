@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     // styledComponents: true,
   },
   experimental: {
-    forceSwcTransforms: false,
+    forceSwcTransforms: true,
   },
 };
 
