@@ -3,8 +3,9 @@ import { randomUUID, createCipheriv, randomBytes, scryptSync } from 'crypto';
 
 // Encryption function
 function encryptSecret(text, encryptionKey) {
+  const salt = randomBytes(16); // Generate random salt
   const iv = randomBytes(16); // Generate random IV
-  const key = scryptSync(encryptionKey, 'disapyr-salt', 32); // Derive key from password
+  const key = scryptSync(encryptionKey, salt, 32); // Derive key from password
   const cipher = createCipheriv('aes-256-gcm', key, iv);
   
   let encrypted = cipher.update(text, 'utf8', 'hex');
@@ -12,15 +13,16 @@ function encryptSecret(text, encryptionKey) {
   
   const authTag = cipher.getAuthTag();
   
-  // Return encrypted data with IV and auth tag
+  // Return encrypted data with IV, auth tag, and salt
   return {
     encrypted: encrypted,
     iv: iv.toString('hex'),
-    authTag: authTag.toString('hex')
+    authTag: authTag.toString('hex'),
+    salt: salt.toString('hex')
   };
 }
 
-export default async (req, context) => {
+export default async (req) => {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import styles from './page.module.css';
+import Layout from '../../components/Layout';
 
 interface SecretData {
   key: string;
@@ -28,12 +29,15 @@ export default function SecretPage() {
         const data = await response.json();
 
         if (!response.ok) {
+          const errorData = await response.json();
           if (response.status === 404) {
             setError('This secret was not found or has already been viewed.');
           } else if (response.status === 410) {
             setError('This secret has expired.');
+          } else if (response.status === 500) {
+            setError(errorData.error || 'A server error occurred. Please try again later.');
           } else {
-            setError(data.error || 'Failed to retrieve secret');
+            setError(errorData.error || 'An unexpected error occurred.');
           }
           return;
         }
@@ -67,40 +71,35 @@ export default function SecretPage() {
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <div className={styles.loading}>
-            <div className={styles.spinner}></div>
-            <p>Retrieving your secret...</p>
-          </div>
-        </main>
-      </div>
+      <Layout>
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+          <p>Retrieving your secret...</p>
+        </div>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <div className={styles.errorContainer}>
-            <h1 className={styles.errorTitle}>Secret Not Available</h1>
-            <p className={styles.errorMessage}>{error}</p>
-            <div className={styles.errorInfo}>
-              <p>🔒 Secrets can only be viewed once</p>
-              <p>⏰ Secrets expire after 21 days</p>
-            </div>
-            <button onClick={handleCreateNew} className={styles.button}>
-              Create a New Secret
-            </button>
+      <Layout>
+        <div className={styles.errorContainer}>
+          <h1 className={styles.errorTitle}>Secret Not Available</h1>
+          <p className={styles.errorMessage}>{error}</p>
+          <div className={styles.errorInfo}>
+            <p>🔒 Secrets can only be viewed once</p>
+            <p>⏰ Secrets expire after 21 days</p>
           </div>
-        </main>
-      </div>
+          <button onClick={handleCreateNew} className={styles.button}>
+            Create a New Secret
+          </button>
+        </div>
+      </Layout>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
+    <Layout>
         <div className={styles.secretContainer}>
           <h1 className={styles.title}>🔓 Secret Retrieved</h1>
           <p className={styles.subtitle}>
@@ -135,7 +134,6 @@ export default function SecretPage() {
             </p>
           </div>
         </div>
-      </main>
-    </div>
+    </Layout>
   );
 }

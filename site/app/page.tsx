@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import styles from './page.module.css';
+import Layout from './components/Layout';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -37,7 +37,15 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create secret');
+        const errorData = await response.json();
+        if (response.status === 400) {
+          setError(errorData.error || 'Invalid input. Please check your secret and expiry days.');
+        } else if (response.status === 500) {
+          setError(errorData.error || 'A server error occurred. Please try again later.');
+        } else {
+          setError(errorData.error || 'An unexpected error occurred.');
+        }
+        return;
       }
 
       // Generate the full URL for the secret
@@ -72,18 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <div className={styles.header}>
-          <div className={styles.titleContainer}>
-            <div className={styles.logoIcon}>🔒</div>
-            <h1 className={styles.title}>disapyr.link</h1>
-          </div>
-          <p className={styles.subtitle}>
-            Share text securely with one-time links that disappear after being viewed
-          </p>
-        </div>
-        
+    <Layout>
         {!generatedLink ? (
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.textareaContainer}>
@@ -168,17 +165,6 @@ export default function Home() {
             ✅ Link copied to clipboard!
           </div>
         )}
-        
-        <footer className={styles.footer}>
-          <p>
-            Your text is encrypted and automatically deleted after being viewed once.
-            <br />
-            <Link href="/about">
-              Learn more about our security
-            </Link>
-          </p>
-        </footer>
-      </main>
-    </div>
+    </Layout>
   );
 }

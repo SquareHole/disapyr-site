@@ -4,9 +4,9 @@ import { createDecipheriv, scryptSync } from 'crypto';
 // Decryption function
 function decryptSecret(encryptedData, encryptionKey) {
   try {
-    const { encrypted, iv, authTag } = encryptedData;
+    const { encrypted, iv, authTag, salt } = encryptedData;
     
-    const key = scryptSync(encryptionKey, 'disapyr-salt', 32); // Derive key from password
+    const key = scryptSync(encryptionKey, Buffer.from(salt, 'hex'), 32); // Derive key from password
     const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(iv, 'hex'));
     decipher.setAuthTag(Buffer.from(authTag, 'hex'));
     
@@ -20,7 +20,7 @@ function decryptSecret(encryptedData, encryptionKey) {
   }
 }
 
-export default async (req, context) => {
+export default async (req) => {
   // Only allow GET requests
   if (req.method !== 'GET') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -90,10 +90,9 @@ export default async (req, context) => {
       });
     }
 
-    // Update the retrieved_at timestamp and clear the secret from database
+    // Delete the secret from the database
     await sql`
-      UPDATE secrets 
-      SET retrieved_at = ${now.toISOString()}, secret = NULL
+      DELETE FROM secrets 
       WHERE key = ${key}
     `;
 
