@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
     // Enables the styled-components SWC transform
     // styledComponents: true,
   },
-  experimental: {
-    forceSwcTransforms: true,
-  },
   async headers() {
     return [
       {

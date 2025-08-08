@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,22 +8,33 @@ export const metadata: Metadata = {
   description: "Secure one-time secret sharing with automatic expiration",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Read the nonce injected by middleware so we can apply it to any
-  // Next-managed scripts via the nonce prop.
-  const nonce = typeof window === 'undefined'
-    ? (require('next/headers').headers().get('x-nonce') ?? undefined)
-    : undefined;
+  // Get the nonce from headers set by middleware
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') || undefined;
 
   return (
     <html lang="en">
+      <head>
+        {/* This meta tag helps Next.js apply nonces to its internal scripts */}
+        {nonce && <meta name="csp-nonce" content={nonce} />}
+      </head>
       <body>
-        {/* Apply nonce to any custom scripts if added in the future */}
-        <Script id="noop" nonce={nonce} strategy="beforeInteractive">{``}</Script>
+        {/* Add a script with nonce to help Next.js understand CSP requirements */}
+        {nonce && (
+          <Script
+            id="csp-nonce-helper"
+            nonce={nonce}
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `window.__CSP_NONCE__ = "${nonce}";`,
+            }}
+          />
+        )}
         {children}
       </body>
     </html>

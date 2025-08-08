@@ -10,12 +10,15 @@ export function middleware(request: NextRequest) {
   const host = request.nextUrl.hostname;
   const isPreview = host.endsWith('.netlify.app');
 
+  // Check if we're in development mode
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
   const cspHeader = (
     isPreview
       ? `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https:;
-        style-src 'self' 'unsafe-inline';
+        script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDevelopment ? " 'unsafe-eval'" : ''};
+        style-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-inline'" : ''};
         img-src 'self' data: blob:;
         font-src 'self' data:;
         connect-src 'self' https:;
@@ -28,8 +31,8 @@ export function middleware(request: NextRequest) {
       `
       : `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https:;
-        style-src 'self' 'unsafe-inline';
+        script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDevelopment ? " 'unsafe-eval'" : ''};
+        style-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-inline'" : ''};
         img-src 'self' data: blob:;
         font-src 'self' data:;
         connect-src 'self' https:;
