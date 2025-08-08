@@ -11,3 +11,9 @@
   from = "/"
   to = "/"
   status = 200
+
+# Optional: Netlify Scheduled Functions (alternative to export const config.schedule)
+[[scheduled.functions]]
+  name = "cleanupExpired"
+  # Run hourly; tune as desired (e.g., daily: '0 0 * * *')
+  schedule = "0 * * * *"

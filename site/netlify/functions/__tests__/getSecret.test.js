@@ -45,6 +45,6 @@ describe('getSecret', () => {
 
     expect(response.status).toBe(200);
     expect(data.secret).toBe('decrypted-secret');
-    expect(mockSql).toHaveBeenCalledTimes(2); // Once to get, once to delete
+  expect(mockSql).toHaveBeenCalledTimes(2); // Once to get, once to soft-delete (UPDATE)
   });
 });

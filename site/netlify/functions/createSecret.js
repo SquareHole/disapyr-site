@@ -1,4 +1,5 @@
 import { neon } from '@netlify/neon';
+import { checkRateLimit } from './_lib/rateLimit';
 import { randomUUID, createCipheriv, randomBytes, scryptSync } from 'crypto';
 
 // Encryption function
@@ -32,6 +33,15 @@ export default async (req) => {
   }
 
   try {
+    // Rate limit: e.g., 10 creates per IP per 5 minutes
+    const rl = await checkRateLimit(req, { key: 'createSecret', limit: 10, windowSeconds: 300 });
+    if (!rl.allowed) {
+      return new Response(JSON.stringify({ error: 'Too many requests' }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...rl.headers },
+      });
+    }
+
     // Parse the request body
     const body = await req.json();
     const { secret, expiryDays } = body;
@@ -90,7 +100,7 @@ export default async (req) => {
       message: 'Secret created successfully'
     }), {
       status: 201,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', ...rl.headers }
     });
 
   } catch (error) {

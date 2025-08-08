@@ -29,15 +29,15 @@ export default function SecretPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          const errorData = await response.json();
+          const message = (data && (data.error as string)) || '';
           if (response.status === 404) {
             setError('This secret was not found or has already been viewed.');
           } else if (response.status === 410) {
             setError('This secret has expired.');
           } else if (response.status === 500) {
-            setError(errorData.error || 'A server error occurred. Please try again later.');
+            setError(message || 'A server error occurred. Please try again later.');
           } else {
-            setError(errorData.error || 'An unexpected error occurred.');
+            setError(message || 'An unexpected error occurred.');
           }
           return;
         }

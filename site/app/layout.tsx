@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "disapyr.link",
@@ -22,9 +12,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read the nonce injected by middleware so we can apply it to any
+  // Next-managed scripts via the nonce prop.
+  const nonce = typeof window === 'undefined'
+    ? (require('next/headers').headers().get('x-nonce') ?? undefined)
+    : undefined;
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
+        {/* Apply nonce to any custom scripts if added in the future */}
+        <Script id="noop" nonce={nonce} strategy="beforeInteractive">{``}</Script>
         {children}
       </body>
     </html>

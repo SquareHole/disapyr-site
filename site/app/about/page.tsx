@@ -30,7 +30,7 @@ export default function AboutPage() {
               <div className={styles.highlight}>
                 <span className={styles.icon}>👁️</span>
                 <strong>One-Time Access</strong>
-                <p>Secrets are permanently deleted after being viewed once, ensuring no trace remains.</p>
+                <p>Secrets are deleted after being viewed once. Content is removed and access is blocked.</p>
               </div>
               <div className={styles.highlight}>
                 <span className={styles.icon}>⏰</span>
@@ -61,7 +61,7 @@ export default function AboutPage() {
                 <div className={styles.stepNumber}>3</div>
                 <div className={styles.stepContent}>
                   <h3>One-Time Retrieval</h3>
-                  <p>When accessed, the secret is decrypted, displayed to the user, and permanently deleted from our servers.</p>
+                  <p>When accessed, the secret is decrypted, displayed once, and then removed (content is nulled) to prevent re-access.</p>
                 </div>
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function AboutPage() {
               </div>
               <div className={styles.techItem}>
                 <h3>Secure Deletion</h3>
-                <p>After retrieval, secret content is overwritten with NULL values, making recovery impossible even from database backups.</p>
+                <p>After retrieval, secret content is overwritten with NULL values. Minimal metadata may remain briefly for cleanup.</p>
               </div>
             </div>
           </section>
