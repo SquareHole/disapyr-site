@@ -5,8 +5,6 @@
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 2rem);
-  background: var(--background);
-  background-image: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
 }
 
 /* Main container is now defined in Layout.module.css */
@@ -52,23 +50,23 @@
   flex-direction: column;
   gap: clamp(1rem, 3vw, 1.5rem);
   width: 100%;
-  max-width: 600px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
 .textareaContainer {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: 720px;
 }
 
 .textarea {
   width: 100%;
-  min-height: 200px;
-  padding: 1.5rem;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  background: var(--input-bg);
+  min-height: 220px;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
   color: var(--foreground);
   font-size: 1rem;
   font-family: inherit;
@@ -76,13 +74,13 @@
   line-height: 1.6;
   resize: vertical;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 10px 30px var(--shadow);
 }
 
 .textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 4px 16px var(--shadow-lg), 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px var(--ring), 0 14px 40px var(--shadow-lg);
   transform: translateY(-1px);
 }
 
@@ -92,16 +90,16 @@
 }
 
 .button {
-  padding: clamp(0.875rem, 2.5vw, 1.25rem) 2rem;
-  background: var(--primary);
+  padding: clamp(0.9rem, 2.5vw, 1.1rem) 1.5rem;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: clamp(1rem, 2.5vw, 1.1rem);
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: clamp(1rem, 2.5vw, 1.075rem);
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 8px 24px var(--shadow);
   min-height: 48px;
   position: relative;
   overflow: hidden;
@@ -119,9 +117,9 @@
 }
 
 .button:hover {
-  background: var(--primary-hover);
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px var(--shadow-lg);
+  box-shadow: 0 16px 40px var(--shadow-lg);
 }
 
 .button:hover::before {
@@ -150,7 +148,7 @@
 .footer {
   margin-top: clamp(3rem, 8vw, 4rem);
   text-align: center;
-  color: var(--secondary);
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
@@ -171,11 +169,11 @@
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
   color: white;
   padding: 1rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px var(--shadow-lg);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 30px var(--shadow-lg);
   font-weight: 500;
   z-index: 1000;
   animation: slideUp 0.3s ease;
@@ -187,7 +185,7 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 720px;
   text-align: center;
 }
 
@@ -200,7 +198,7 @@
 
 .successSubtitle {
   font-size: 1.1rem;
-  color: var(--secondary);
+  color: var(--muted);
   margin: 0;
   line-height: 1.5;
 }
@@ -209,11 +207,11 @@
   display: flex;
   gap: 0.5rem;
   width: 100%;
-  background: var(--input-bg);
-  border: 2px solid var(--border);
-  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 0.5rem;
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 10px 30px var(--shadow);
 }
 
 .linkInput {
@@ -229,10 +227,10 @@
 
 .copyButton {
   padding: 0.75rem 1.5rem;
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -240,9 +238,7 @@
   white-space: nowrap;
 }
 
-.copyButton:hover {
-  background: var(--primary-hover);
-}
+.copyButton:hover { background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); }
 
 .linkInfo {
   display: flex;
@@ -254,7 +250,7 @@
 .linkInfo p {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--secondary);
+  color: var(--muted);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -263,9 +259,9 @@
 .secondaryButton {
   padding: 0.875rem 1.5rem;
   background: transparent;
-  color: var(--primary);
-  border: 2px solid var(--primary);
-  border-radius: 8px;
+  color: var(--primary-500);
+  border: 2px solid var(--primary-600);
+  border-radius: var(--radius-sm);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -273,10 +269,7 @@
   margin-top: 1rem;
 }
 
-.secondaryButton:hover {
-  background: var(--primary);
-  color: white;
-}
+.secondaryButton:hover { background: var(--primary-600); color: white; }
 
 .error {
   padding: 1rem;
@@ -294,18 +287,15 @@
   flex-direction: row;
   align-items: center;
   gap: 1rem;
-  background: var(--input-bg);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  box-shadow: 0 2px 8px var(--shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 10px 30px var(--shadow);
   transition: all 0.2s ease;
 }
 
-.expiryContainer:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 4px 16px var(--shadow-lg), 0 0 0 3px rgba(168, 85, 247, 0.1);
-}
+.expiryContainer:focus-within { border-color: var(--accent-600); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2); }
 
 .expiryLabel {
   font-size: 1rem;
@@ -318,9 +308,9 @@
 .expiryInput {
   width: 80px;
   padding: 0.75rem;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
   color: var(--foreground);
   font-size: 1rem;
   font-family: inherit;
@@ -329,16 +319,11 @@
   transition: all 0.2s ease;
 }
 
-.expiryInput:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.1);
-  transform: scale(1.02);
-}
+.expiryInput:focus { outline: none; border-color: var(--accent-600); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2); transform: scale(1.02); }
 
 .expiryHint {
   font-size: 0.875rem;
-  color: var(--secondary);
+  color: var(--muted);
   font-style: italic;
   margin: 0;
 }

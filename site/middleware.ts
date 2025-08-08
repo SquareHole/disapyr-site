@@ -56,7 +56,7 @@ export function middleware(request: NextRequest) {
   });
   
   // Set the CSP header
-  // response.headers.set('Content-Security-Policy', cspHeader);
+  response.headers.set('Content-Security-Policy', cspHeader);
   
   // Also expose the nonce on the response for debugging/clients if needed
   response.headers.set('x-nonce', nonce);
