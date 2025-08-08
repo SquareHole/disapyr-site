@@ -11,7 +11,7 @@ disapyr.link is a secure text sharing service that allows you to share sensitive
 ### Key Features
 
 - **🔐 Military-Grade Encryption**: AES-256-GCM encryption with unique initialization vectors
-- **👁️ One-Time Access**: Secrets are permanently deleted after being viewed once
+- **👁️ One-Time Access**: Secrets are deleted after being viewed once (content is nulled and access is blocked)
 - **⏰ Automatic Expiration**: Configurable expiration (1-365 days, default 21 days)
 - **🚫 Zero Knowledge**: We cannot read your secrets - they're encrypted before storage
 - **📱 Mobile Friendly**: Responsive design works on all devices
@@ -37,8 +37,9 @@ Visit [disapyr.link](https://disapyr.link) to try it out!
 ### Security
 - **AES-256-GCM** encryption algorithm
 - **scrypt** key derivation function
-- **Secure deletion** after retrieval
+- **Secure deletion** after retrieval (content nullified; minimal access metadata retained)
 - **Environment-based encryption keys**
+- **Rate limiting** on API functions (per-IP fixed window)
 
 ## 🏗️ Project Structure
 
@@ -54,7 +55,8 @@ Visit [disapyr.link](https://disapyr.link) to try it out!
 │   │       └── page.tsx          # Secret viewing page
 │   ├── netlify/functions/
 │   │   ├── createSecret.js       # API: Create encrypted secret
-│   │   └── getSecret.js          # API: Retrieve and delete secret
+│   │   ├── getSecret.js          # API: Retrieve and soft-delete (null content)
+│   │   └── cleanupExpired.js     # Scheduled cleanup of expired/old rows
 │   ├── package.json
 │   └── next.config.ts
 ├── netlify.toml                  # Netlify configuration
@@ -136,6 +138,8 @@ CREATE TABLE secrets (
 4. **Deploy**
    - Netlify will automatically deploy on git push
    - Functions will be available at `/.netlify/functions/`
+   - Security headers are copied from `public/_headers` into the publish dir via the build command
+   - CSP is set dynamically via Next.js middleware (single source of truth)
 
 ### Environment Variables
 
@@ -152,13 +156,22 @@ CREATE TABLE secrets (
 2. **Key Derivation**: scrypt derives encryption key from master key + salt
 3. **Encryption**: AES-256-GCM encrypts text with unique IV
 4. **Storage**: Only encrypted data stored in database
-5. **Retrieval**: Text decrypted on-demand and immediately deleted
+5. **Retrieval**: Text decrypted on-demand and immediately deleted (soft-delete: content set to NULL, access blocked)
 
 ### Security Features
 
 - **Zero Knowledge Architecture**: Server cannot read plaintext secrets
 - **Perfect Forward Secrecy**: Each secret uses unique encryption parameters
-- **Secure Deletion**: Overwritten with NULL after retrieval
+- **Secure Deletion**: Overwritten with NULL after retrieval; minimal metadata (timestamps) may remain briefly for abuse prevention and cleanup
+
+### Scheduled Cleanup
+
+This project includes an automated cleanup task to remove stale data:
+
+- Deletes rows where `expires_at < now()`
+- Deletes rows with `retrieved_at` older than 7 days
+
+You can configure scheduling either in code (see `site/netlify/functions/cleanupExpired.js` with `export const config = { schedule: '@hourly' }`) or via `site/netlify.toml` using `[[scheduled.functions]]` with a cron expression.
 - **Time-based Expiration**: Automatic cleanup of expired secrets
 - **Input Validation**: Length limits and sanitization
 - **Error Handling**: No information leakage in error messages
@@ -197,6 +210,25 @@ GET /.netlify/functions/getSecret?key=uuid-v4-key
   "secret": "Your sensitive text here",
   "retrieved_at": "2024-01-01T10:30:00Z"
 }
+```
+
+### Rate Limiting
+
+To protect against abuse, the API enforces per-IP fixed-window limits:
+
+- Create: up to 10 requests per 5 minutes
+- Get: up to 60 requests per 5 minutes
+
+Responses include standard headers:
+
+- `X-RateLimit-Limit`: allowed requests in the window
+- `X-RateLimit-Remaining`: remaining requests
+- `X-RateLimit-Reset`: epoch seconds when the window resets
+
+When exceeded, the API returns HTTP 429 with a minimal body:
+
+```json
+{ "error": "Too many requests" }
 ```
 
 ## 🤝 Contributing

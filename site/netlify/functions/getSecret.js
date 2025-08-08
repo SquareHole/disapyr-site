@@ -1,4 +1,5 @@
 import { neon } from '@netlify/neon';
+import { checkRateLimit } from './_lib/rateLimit';
 import { createDecipheriv, scryptSync } from 'crypto';
 
 // Decryption function
@@ -30,6 +31,15 @@ export default async (req) => {
   }
 
   try {
+    // Rate limit: e.g., 60 retrieval attempts per IP per 5 minutes
+    const rl = await checkRateLimit(req, { key: 'getSecret', limit: 60, windowSeconds: 300 });
+    if (!rl.allowed) {
+      return new Response(JSON.stringify({ error: 'Too many requests' }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...rl.headers },
+      });
+    }
+
     // Get the key from query parameters
     const url = new URL(req.url);
     const key = url.searchParams.get('key');
@@ -90,9 +100,10 @@ export default async (req) => {
       });
     }
 
-    // Delete the secret from the database
+    // Soft-delete: mark as retrieved and nullify content to prevent re-access, preserve audit
     await sql`
-      DELETE FROM secrets 
+      UPDATE secrets 
+      SET retrieved_at = ${now.toISOString()}, secret = NULL
       WHERE key = ${key}
     `;
 
@@ -103,7 +114,7 @@ export default async (req) => {
       retrieved_at: now.toISOString()
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', ...rl.headers }
     });
 
   } catch (error) {

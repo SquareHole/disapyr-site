@@ -37,13 +37,13 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const message = (data && (data.error as string)) || '';
         if (response.status === 400) {
-          setError(errorData.error || 'Invalid input. Please check your secret and expiry days.');
+          setError(message || 'Invalid input. Please check your secret and expiry days.');
         } else if (response.status === 500) {
-          setError(errorData.error || 'A server error occurred. Please try again later.');
+          setError(message || 'A server error occurred. Please try again later.');
         } else {
-          setError(errorData.error || 'An unexpected error occurred.');
+          setError(message || 'An unexpected error occurred.');
         }
         return;
       }

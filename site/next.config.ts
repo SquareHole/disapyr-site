@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
   experimental: {
     forceSwcTransforms: true,
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*', // Applies to all paths
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
