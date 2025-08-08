@@ -18,20 +18,35 @@ export default async function RootLayout({
   const nonce = headersList.get('x-nonce') || undefined;
 
   return (
-    <html lang="en">
+    <html lang="en" data-csp-nonce={nonce}>
       <head>
-        {/* This meta tag helps Next.js apply nonces to its internal scripts */}
+        {/* Essential meta tags for Next.js CSP integration */}
         {nonce && <meta name="csp-nonce" content={nonce} />}
+        {nonce && <meta name="next-head-nonce" content={nonce} />}
       </head>
       <body>
-        {/* Add a script with nonce to help Next.js understand CSP requirements */}
+        {/* Critical nonce injection for Next.js internal scripts */}
         {nonce && (
           <Script
-            id="csp-nonce-helper"
+            id="nextjs-csp-nonce"
             nonce={nonce}
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
-              __html: `window.__CSP_NONCE__ = "${nonce}";`,
+              __html: `
+                window.__NEXT_CSP_NONCE__ = "${nonce}";
+                window.__CSP_NONCE__ = "${nonce}";
+                // Ensure all dynamically created scripts get the nonce
+                (function() {
+                  const originalCreateElement = document.createElement;
+                  document.createElement = function(tagName) {
+                    const element = originalCreateElement.call(this, tagName);
+                    if (tagName.toLowerCase() === 'script') {
+                      element.nonce = "${nonce}";
+                    }
+                    return element;
+                  };
+                })();
+              `,
             }}
           />
         )}
