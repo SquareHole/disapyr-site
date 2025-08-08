@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
     isPreview
       ? `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDevelopment ? " 'unsafe-eval'" : ''};
+        script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ''};
         style-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-inline'" : ''};
         img-src 'self' data: blob:;
         font-src 'self' data:;
@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
       `
       : `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDevelopment ? " 'unsafe-eval'" : ''};
+        script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ''};
         style-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-inline'" : ''};
         img-src 'self' data: blob:;
         font-src 'self' data:;
