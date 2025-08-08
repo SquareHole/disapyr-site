@@ -28,11 +28,11 @@ export function middleware(request: NextRequest) {
       `
       : `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}';
+        script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https:;
         style-src 'self' 'unsafe-inline';
         img-src 'self' data: blob:;
         font-src 'self' data:;
-        connect-src 'self';
+        connect-src 'self' https:;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
