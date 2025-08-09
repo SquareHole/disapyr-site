@@ -106,6 +106,19 @@ export default function Home() {
                 onChange={(e) => setExpiryDays(Math.min(Math.max(parseInt(e.target.value) || 1, 1), 365))}
                 className={styles.expiryInput}
               />
+              <div className={styles.expiryChips} role="group" aria-label="Quick expiry options">
+                {[7, 14, 21, 30].map(d => (
+                  <button
+                    key={d}
+                    type="button"
+                    className={`${styles.chip} ${expiryDays === d ? styles.chipActive : ''}`}
+                    onClick={() => setExpiryDays(d)}
+                    aria-pressed={expiryDays === d}
+                  >
+                    {d}d
+                  </button>
+                ))}
+              </div>
               <span className={styles.expiryHint}>Between 1 and 365 days</span>
             </div>
             
@@ -114,11 +127,18 @@ export default function Home() {
               className={styles.button}
               disabled={isLoading}
             >
-              {isLoading ? 'Creating Link...' : 'Create Secure Link'}
+              {isLoading ? (
+                <>
+                  <span className={styles.spinner} aria-hidden />
+                  Creating Link...
+                </>
+              ) : (
+                'Create Secure Link'
+              )}
             </button>
 
             {error && (
-              <div className={styles.error}>
+              <div className={styles.error} aria-live="polite">
                 {error}
               </div>
             )}
@@ -161,7 +181,7 @@ export default function Home() {
         
         {/* Toast notification for copy success */}
         {copySuccess && (
-          <div className={styles.toast}>
+          <div className={styles.toast} aria-live="polite">
             ✅ Link copied to clipboard!
           </div>
         )}

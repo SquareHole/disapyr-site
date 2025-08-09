@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import LockIcon from './LockIcon';
 import styles from './Layout.module.css';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -7,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <header className={styles.navbar}>
         <div className={styles.navInner}>
           <Link href="/" className={styles.brand}>
-            <span className={styles.logoIcon} aria-hidden>🔒</span>
+            <LockIcon className={styles.logoIcon} />
             <span className={styles.brandText}>disapyr.link</span>
           </Link>
           <nav className={styles.navLinks} aria-label="Primary">
@@ -20,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className={styles.main}> 
         <div className={styles.header}>
           <div className={styles.titleContainer}>
-            <div className={styles.logoIcon} aria-hidden>🔒</div>
+            <LockIcon className={styles.logoIcon} />
             <h1 className={styles.title}>disapyr.link</h1>
           </div>
           <p className={styles.subtitle}>

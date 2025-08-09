@@ -42,13 +42,35 @@
 }
 
 .navLink {
+  position: relative;
   color: var(--muted);
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: color var(--motion-fast) ease;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width var(--motion-fast) ease;
 }
 
 .navLink:hover {
   color: var(--foreground);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navLink, .navLink::after {
+    transition: none;
+  }
 }
 
 .main {
@@ -72,7 +94,8 @@
 }
 
 .logoIcon {
-  font-size: 2rem;
+  width: 26px;
+  height: 26px;
   filter: drop-shadow(0 6px 18px rgba(59, 130, 246, 0.35));
 }
 

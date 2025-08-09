@@ -19,10 +19,25 @@
   --placeholder: #6b7280;
 
   --ring: rgba(59, 130, 246, 0.35);
+  --ring-strong: rgba(59, 130, 246, 0.55);
+
+  /* New colors */
+  --success: #10b981;
+  --warning: #f59e0b;
 
   /* Elevation */
   --shadow: rgba(2, 6, 23, 0.35);
   --shadow-lg: rgba(2, 6, 23, 0.5);
+  --elev-1: 0 4px 16px rgba(2, 6, 23, 0.25);
+  --elev-2: 0 8px 32px rgba(2, 6, 23, 0.35);
+
+  /* Motion */
+  --motion-fast: 150ms;
+  --motion: 220ms;
+
+  /* Form fields */
+  --field-border: rgba(148, 163, 184, 0.16);
+  --field-bg: rgba(15, 23, 42, 0.6);
 
   /* Spacing scale */
   --space-1: 0.25rem;
@@ -76,13 +91,25 @@ body {
 body {
   color: var(--foreground);
   background:
-    radial-gradient(1200px 800px at 0% 0%, rgba(59, 130, 246, 0.15), transparent 60%),
-    radial-gradient(800px 600px at 100% 0%, rgba(168, 85, 247, 0.12), transparent 60%),
+    radial-gradient(1200px 800px at 0% 0%, rgba(59, 130, 246, 0.12), transparent 60%),
+    radial-gradient(900px 650px at 100% 10%, rgba(168, 85, 247, 0.10), transparent 60%),
+    conic-gradient(from 200deg at 70% 30%, rgba(59, 130, 246, 0.06), rgba(168, 85, 247, 0.04), rgba(59, 130, 246, 0.06)),
     linear-gradient(180deg, var(--background), var(--surface));
+  background-blend-mode: screen, screen, soft-light, normal;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  animation: drift 40s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 0 0, 0 0, 40px 20px, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
 }
 
 * {
