@@ -10,12 +10,14 @@ disapyr.link is a secure text sharing service that allows you to share sensitive
 
 ### Key Features
 
-- **🔐 Military-Grade Encryption**: AES-256-GCM encryption with unique initialization vectors
-- **👁️ One-Time Access**: Secrets are deleted after being viewed once (content is nulled and access is blocked)
-- **⏰ Automatic Expiration**: Configurable expiration (1-365 days, default 21 days)
-- **🚫 Zero Knowledge**: We cannot read your secrets - they're encrypted before storage
-- **📱 Mobile Friendly**: Responsive design works on all devices
-- **🌙 Dark Mode**: Beautiful dark/light theme support
+**🔐 Military-Grade Encryption**: AES-256-GCM encryption with unique initialization vectors
+**👁️ One-Time Access**: Secrets are deleted after being viewed once (content is nulled and access is blocked)
+**⏰ Automatic Expiration**: Configurable expiration (1-365 days, default 21 days)
+**🚫 Zero Knowledge**: We cannot read your secrets - they're encrypted before storage
+**📱 Mobile Friendly**: Responsive design works on all devices
+**🌙 Dark/Light Mode**: Beautiful dark/light theme support using CSS custom properties in `globals.css`
+**⚡ Quick-Pick Expiry Chips**: Easily select 7/14/21/30 day expiry with a single click
+**♿ Accessibility Enhancements**: ARIA live regions, focus management, and reduced-motion support
 
 ## 🚀 Live Demo
 
@@ -33,6 +35,9 @@ Visit [disapyr.link](https://disapyr.link) to try it out!
 - **Netlify Functions** - Serverless API endpoints
 - **Neon Postgres** - Cloud-hosted PostgreSQL database
 - **Node.js Crypto** - Built-in encryption/decryption
+
+#### Rate Limiting
+- Per-IP rate limiting is enforced for all API functions using `site/netlify/functions/_lib/rateLimit.js`.
 
 ### Security
 - **AES-256-GCM** encryption algorithm
@@ -107,13 +112,15 @@ The application requires a PostgreSQL table with the following schema:
 
 ```sql
 CREATE TABLE secrets (
-    id SERIAL PRIMARY KEY,
-    key UUID UNIQUE NOT NULL,
-    secret TEXT,
-    retrieved_at TIMESTAMP,
-    expires_at TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   id SERIAL PRIMARY KEY, -- Optional: some environments may not have this column
+   key UUID UNIQUE NOT NULL,
+   secret TEXT,
+   retrieved_at TIMESTAMP,
+   expires_at TIMESTAMP NOT NULL,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+**Note:** The codebase always prefers `key` (UUID) for lookups. Some environments may not have an `id` column; ensure your cleanup and retrieval logic does not depend on `id`.
 ```
 
 ## 🚀 Deployment
@@ -164,12 +171,17 @@ CREATE TABLE secrets (
 - **Perfect Forward Secrecy**: Each secret uses unique encryption parameters
 - **Secure Deletion**: Overwritten with NULL after retrieval; minimal metadata (timestamps) may remain briefly for abuse prevention and cleanup
 
+- **Theming**: All styling uses CSS custom properties for dark/light mode in `site/app/globals.css`.
+- **UI/UX**: Quick-pick expiry chips, accessible focus states, and responsive design are implemented throughout the frontend.
+
 ### Scheduled Cleanup
 
 This project includes an automated cleanup task to remove stale data:
 
 - Deletes rows where `expires_at < now()`
 - Deletes rows with `retrieved_at` older than 7 days
+
+**Implementation note:** The cleanup function (`site/netlify/functions/cleanupExpired.js`) uses `RETURNING 1` in SQL to count deleted rows, avoiding schema mismatches if `id` is not present.
 
 You can configure scheduling either in code (see `site/netlify/functions/cleanupExpired.js` with `export const config = { schedule: '@hourly' }`) or via `site/netlify.toml` using `[[scheduled.functions]]` with a cron expression.
 - **Time-based Expiration**: Automatic cleanup of expired secrets
