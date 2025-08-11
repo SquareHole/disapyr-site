@@ -46,6 +46,12 @@
   --space-4: 1rem;
   --space-5: 1.25rem;
   --space-6: 1.5rem;
+
+    /* Component surfaces */
+    --navbar-bg: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.4));
+    --form-bg: linear-gradient(180deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.45));
+    --chip-bg: rgba(255, 255, 255, 0.03);
+    --chip-bg-hover: rgba(255, 255, 255, 0.06);
   --space-8: 2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
@@ -62,11 +68,21 @@
 /* Light theme override (optional) */
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #ffffff;
+      --input-bg: #ffffff;
     --surface: #ffffff;
     --foreground: #111827;
     --muted: #6b7280;
     --primary: #2563eb;
+
+      /* Form fields */
+      --field-bg: #ffffff; /* ensure textareas/inputs are light in light mode */
+      --field-border: rgba(17, 24, 39, 0.12);
+
+      /* Component surfaces */
+      --navbar-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.65));
+      --form-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+      --chip-bg: rgba(2, 6, 23, 0.04);
+      --chip-bg-hover: rgba(2, 6, 23, 0.08);
     --primary-500: #2563eb;
     --primary-600: #1d4ed8;
     --primary-700: #1e40af;
