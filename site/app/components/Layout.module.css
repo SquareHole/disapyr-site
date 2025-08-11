@@ -9,7 +9,7 @@
   top: 0;
   z-index: 50;
   backdrop-filter: saturate(120%) blur(10px);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.4));
+  background: var(--navbar-bg);
   border-bottom: 1px solid var(--border);
 }
 

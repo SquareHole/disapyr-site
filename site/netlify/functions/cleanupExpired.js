@@ -17,11 +17,11 @@ export default async function handler() {
       WITH del_expired AS (
         DELETE FROM secrets
         WHERE expires_at < ${nowIso}
-        RETURNING id
+        RETURNING 1 AS deleted
       ), del_old_retrieved AS (
         DELETE FROM secrets
         WHERE retrieved_at IS NOT NULL AND retrieved_at < (${nowIso}::timestamp - interval '7 days')
-        RETURNING id
+        RETURNING 1 AS deleted
       )
       SELECT
         (SELECT count(*) FROM del_expired)::int AS expired_deleted,
