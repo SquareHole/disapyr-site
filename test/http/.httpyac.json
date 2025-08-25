@@ -1,0 +1,7 @@
+{
+    "environments": {
+        "$shared": {
+            "port": 8888
+        }
+    }
+}

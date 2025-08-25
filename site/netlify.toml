@@ -17,3 +17,7 @@
   name = "cleanupExpired"
   # Run hourly; tune as desired (e.g., daily: '0 0 * * *')
   schedule = "0 * * * *"
+
+[dev]
+  targetPort = 3000
+  port = 8888
