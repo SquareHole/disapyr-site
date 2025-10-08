@@ -81,6 +81,18 @@ export default async (req) => {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + validExpiryDays);
 
+    // Capture creation timestamp and client IP
+    const createdAt = new Date().toISOString();
+    // Extract IP similar to rateLimit.getClientIp
+    let clientIp = 'unknown';
+    try {
+      const xfwd = req.headers.get('x-forwarded-for');
+      if (xfwd) clientIp = xfwd.split(',')[0].trim();
+      else if (req.headers.get('x-nf-client-connection-ip')) clientIp = req.headers.get('x-nf-client-connection-ip').trim();
+    } catch (e) {
+      // leave clientIp as 'unknown' if extraction fails
+    }
+
     // Encrypt the secret
     const encryptedData = encryptSecret(secret.trim(), encryptionKey);
 
@@ -89,8 +101,8 @@ export default async (req) => {
 
     // Insert the encrypted secret into the database
     await sql`
-      INSERT INTO secrets (key, secret, retrieved_at, expires_at)
-      VALUES (${key}, ${JSON.stringify(encryptedData)}, NULL, ${expiresAt.toISOString()})
+      INSERT INTO secrets (key, secret, retrieved_at, expires_at, created_at, ip)
+      VALUES (${key}, ${JSON.stringify(encryptedData)}, NULL, ${expiresAt.toISOString()}, ${createdAt}, ${clientIp})
     `;
 
     // Return the generated key
