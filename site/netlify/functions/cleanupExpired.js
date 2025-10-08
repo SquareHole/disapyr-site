@@ -49,5 +49,5 @@ export default async function handler() {
 }
 
 export const config = {
-  schedule: '@hourly', // Netlify Scheduled Functions: hourly by default; adjust as needed
+  schedule: '@daily', // Netlify Scheduled Functions: hourly by default; adjust as needed
 };
