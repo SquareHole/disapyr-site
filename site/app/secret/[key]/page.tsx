@@ -50,7 +50,7 @@ export default function SecretPage() {
       }
     };
 
-    fetchSecret();
+    fetchSecret().then(r => {});
   }, [key]);
 
   const handleCopySecret = async () => {

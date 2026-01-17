@@ -1,6 +1,6 @@
 import { neon } from '@netlify/neon';
 import { checkRateLimit } from './_lib/rateLimit';
-import { randomUUID, randomBytes } from 'crypto';
+import { randomUUID } from 'crypto';
 import { assertEnv } from './_lib/assertEnv';
 import { encryptSecret } from './_lib/crypto';
 
