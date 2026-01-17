@@ -9,6 +9,9 @@ import { neon } from '@netlify/neon';
 
 export default async function handler() {
   try {
+    // Fail fast if required env is missing/invalid
+    assertEnv();
+
     const sql = neon();
     const nowIso = new Date().toISOString();
 
