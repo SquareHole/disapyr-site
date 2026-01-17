@@ -1,25 +1,8 @@
 import { neon } from '@netlify/neon';
 import { checkRateLimit } from './_lib/rateLimit';
-import { createDecipheriv, scryptSync } from 'crypto';
+import { assertEnv } from './_lib/assertEnv';
+import { decryptSecret } from './_lib/crypto';
 
-// Decryption function
-function decryptSecret(encryptedData, encryptionKey) {
-  try {
-    const { encrypted, iv, authTag, salt } = encryptedData;
-    
-    const key = scryptSync(encryptionKey, Buffer.from(salt, 'hex'), 32); // Derive key from password
-    const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(iv, 'hex'));
-    decipher.setAuthTag(Buffer.from(authTag, 'hex'));
-    
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    
-    return decrypted;
-  } catch (error) {
-    console.error('Decryption error:', error);
-    throw new Error('Failed to decrypt secret');
-  }
-}
 
 export default async (req) => {
   // Only allow GET requests
@@ -31,6 +14,9 @@ export default async (req) => {
   }
 
   try {
+    // Fail fast if required env is missing/invalid
+    assertEnv();
+
     // Rate limit: e.g., 60 retrieval attempts per IP per 5 minutes
     const rl = await checkRateLimit(req, { key: 'getSecret', limit: 60, windowSeconds: 300 });
     if (!rl.allowed) {
@@ -40,12 +26,13 @@ export default async (req) => {
       });
     }
 
-    // Get the key from query parameters
+    // Get the key from query parameters and validate format (UUID v4)
     const url = new URL(req.url);
     const key = url.searchParams.get('key');
 
-    if (!key) {
-      return new Response(JSON.stringify({ error: 'Key parameter is required' }), {
+    const uuidV4 = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!key || !uuidV4.test(key)) {
+      return new Response(JSON.stringify({ error: 'Key parameter is required and must be a valid UUID' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });

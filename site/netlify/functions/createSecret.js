@@ -1,27 +1,8 @@
 import { neon } from '@netlify/neon';
 import { checkRateLimit } from './_lib/rateLimit';
-import { randomUUID, createCipheriv, randomBytes, scryptSync } from 'crypto';
-
-// Encryption function
-function encryptSecret(text, encryptionKey) {
-  const salt = randomBytes(16); // Generate random salt
-  const iv = randomBytes(16); // Generate random IV
-  const key = scryptSync(encryptionKey, salt, 32); // Derive key from password
-  const cipher = createCipheriv('aes-256-gcm', key, iv);
-  
-  let encrypted = cipher.update(text, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  
-  const authTag = cipher.getAuthTag();
-  
-  // Return encrypted data with IV, auth tag, and salt
-  return {
-    encrypted: encrypted,
-    iv: iv.toString('hex'),
-    authTag: authTag.toString('hex'),
-    salt: salt.toString('hex')
-  };
-}
+import { randomUUID, randomBytes } from 'crypto';
+import { assertEnv } from './_lib/assertEnv';
+import { encryptSecret } from './_lib/crypto';
 
 export default async (req) => {
   // Only allow POST requests
@@ -30,6 +11,15 @@ export default async (req) => {
       status: 405,
       headers: { 'Content-Type': 'application/json' }
     });
+  }
+
+  // Fail fast if required env is missing/invalid
+  assertEnv();
+
+  // Require JSON content-type for POSTs
+  const contentType = (req.headers && req.headers.get && req.headers.get('content-type')) || '';
+  if (!contentType.includes('application/json')) {
+    return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), { status: 415, headers: { 'Content-Type': 'application/json' } });
   }
 
   try {
