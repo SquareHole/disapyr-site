@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "disapyr.link",

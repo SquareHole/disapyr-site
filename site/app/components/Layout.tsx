@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import LockIcon from './LockIcon';
 import styles from './Layout.module.css';
+import React from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
