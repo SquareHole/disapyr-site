@@ -3,7 +3,7 @@
 ## 2026-02-24 — fix/review-46-fixes
 - date: 2026-02-24
 - branch: fix/review-46-fixes
-- commit: TBD
+- commit: 6d085c1
 - summary: Implement all actionable fixes from review-46. Resolves critical broken-cleanup bug, TOCTOU race condition on secret retrieval, missing CSP header, and insecure nonce DOM exposure. Also fixes broken tests, medium-priority bugs, and low-priority quality issues.
 - scope:
   - `cleanupExpired.js` — add missing `assertEnv` import (was causing ReferenceError on every invocation); remove duplicate `schedule` export (netlify.toml is now sole source of truth)
@@ -24,7 +24,6 @@
 - notes:
   - Issue #5 (server-side encryption contradicts zero-knowledge docs) is intentionally deferred — requires explicit human approval per governance policy.
   - Issues #15 and #16 (DDL-as-migration and rate_limits index) are intentionally deferred as separate database migration work.
-  - Entry will be updated with final commit SHA before merge.
 
 ## 2026-01-17 — feat/env-assertion-ci-tests
 - date: 2026-01-17
