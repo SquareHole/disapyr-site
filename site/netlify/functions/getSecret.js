@@ -2,6 +2,7 @@ import { neon } from '@netlify/neon';
 import { checkRateLimit } from './_lib/rateLimit';
 import { assertEnv } from './_lib/assertEnv';
 import { decryptSecret } from './_lib/crypto';
+import { isUuidV4 } from './_lib/validate';
 
 
 export default async (req) => {
@@ -30,32 +31,28 @@ export default async (req) => {
     const url = new URL(req.url);
     const key = url.searchParams.get('key');
 
-    const uuidV4 = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (!key || !uuidV4.test(key)) {
+    if (!key || !isUuidV4(key)) {
       return new Response(JSON.stringify({ error: 'Key parameter is required and must be a valid UUID' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Check for encryption key
     const encryptionKey = process.env.NETLIFY_ENCRYPTION_KEY;
-    if (!encryptionKey) {
-      console.error('NETLIFY_ENCRYPTION_KEY environment variable not set');
-      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Initialize Neon connection (automatically uses NETLIFY_DATABASE_URL)
     const sql = neon();
+    const now = new Date();
 
-    // First, check if the secret exists and hasn't been retrieved yet
+    // Atomic UPDATE...RETURNING: marks the secret as retrieved only if it exists,
+    // hasn't already been retrieved, and hasn't expired. Prevents TOCTOU race conditions
+    // that would allow a secret to be read more than once.
     const [secret] = await sql`
-      SELECT key, secret, expires_at, retrieved_at 
-      FROM secrets 
-      WHERE key = ${key} AND retrieved_at IS NULL AND secret IS NOT NULL
+      UPDATE secrets
+      SET retrieved_at = ${now.toISOString()}
+      WHERE key = ${key}
+        AND retrieved_at IS NULL
+        AND secret IS NOT NULL
+        AND (expires_at IS NULL OR expires_at > ${now.toISOString()})
+      RETURNING key, secret, expires_at, retrieved_at
     `;
 
     if (!secret) {
@@ -65,16 +62,7 @@ export default async (req) => {
       });
     }
 
-    // Check if the secret has expired
-    const now = new Date();
-    if (secret.expires_at && new Date(secret.expires_at) < now) {
-      return new Response(JSON.stringify({ error: 'Secret has expired' }), {
-        status: 410,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Decrypt the secret
+    // Decrypt the secret before nullifying it in the database
     let decryptedSecret;
     try {
       const encryptedData = JSON.parse(secret.secret);
@@ -87,15 +75,15 @@ export default async (req) => {
       });
     }
 
-    // Soft-delete: mark as retrieved and nullify content to prevent re-access, preserve audit
+    // Nullify the encrypted content — retrieved_at was already set atomically above
     await sql`
-      UPDATE secrets 
-      SET retrieved_at = ${now.toISOString()}, secret = NULL
+      UPDATE secrets
+      SET secret = NULL
       WHERE key = ${key}
     `;
 
     // Return the decrypted secret
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       key: secret.key,
       secret: decryptedSecret,
       retrieved_at: now.toISOString()

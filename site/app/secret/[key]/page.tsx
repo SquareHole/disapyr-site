@@ -21,7 +21,11 @@ export default function SecretPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!key) return;
+    if (!key) {
+      setLoading(false);
+      setError('Invalid secret link.');
+      return;
+    }
 
     const fetchSecret = async () => {
       try {
@@ -43,14 +47,14 @@ export default function SecretPage() {
         }
 
         setSecretData(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load secret. Please check your connection.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSecret().then(r => {});
+    fetchSecret().catch(console.error);
   }, [key]);
 
   const handleCopySecret = async () => {

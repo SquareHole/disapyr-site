@@ -1,4 +1,5 @@
 import { neon } from '@netlify/neon';
+import { assertEnv } from './_lib/assertEnv';
 
 // Netlify Scheduled Function: cleanupExpired
 // Schedule via Netlify UI or netlify.toml (cron): e.g., '0 * * * *' (hourly)
@@ -51,6 +52,4 @@ export default async function handler() {
   }
 }
 
-export const config = {
-  schedule: '@daily', // Netlify Scheduled Functions: hourly by default; adjust as needed
-};
+// Schedule is defined solely in netlify.toml to avoid conflicts (see: [[scheduled.functions]])

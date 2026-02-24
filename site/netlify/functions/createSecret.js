@@ -1,8 +1,9 @@
 import { neon } from '@netlify/neon';
-import { checkRateLimit } from './_lib/rateLimit';
+import { checkRateLimit, getClientIp } from './_lib/rateLimit';
 import { randomUUID } from 'crypto';
 import { assertEnv } from './_lib/assertEnv';
 import { encryptSecret } from './_lib/crypto';
+import { normalizeExpiryDays } from './_lib/validate';
 
 export default async (req) => {
   // Only allow POST requests
@@ -52,17 +53,7 @@ export default async (req) => {
     }
 
     // Validate and sanitize expiry days (default to 21, min 1, max 365)
-    const validExpiryDays = expiryDays ? Math.min(Math.max(parseInt(expiryDays), 1), 365) : 21;
-
-    // Check for encryption key
-    const encryptionKey = process.env.NETLIFY_ENCRYPTION_KEY;
-    if (!encryptionKey) {
-      console.error('NETLIFY_ENCRYPTION_KEY environment variable not set');
-      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+    const validExpiryDays = normalizeExpiryDays(expiryDays);
 
     // Generate a unique key
     const key = randomUUID();
@@ -73,18 +64,10 @@ export default async (req) => {
 
     // Capture creation timestamp and client IP
     const createdAt = new Date().toISOString();
-    // Extract IP similar to rateLimit.getClientIp
-    let clientIp = 'unknown';
-    try {
-      const xfwd = req.headers.get('x-forwarded-for');
-      if (xfwd) clientIp = xfwd.split(',')[0].trim();
-      else if (req.headers.get('x-nf-client-connection-ip')) clientIp = req.headers.get('x-nf-client-connection-ip').trim();
-    } catch (e) {
-      // leave clientIp as 'unknown' if extraction fails
-    }
+    const clientIp = getClientIp(req);
 
     // Encrypt the secret
-    const encryptedData = encryptSecret(secret.trim(), encryptionKey);
+    const encryptedData = encryptSecret(secret.trim(), process.env.NETLIFY_ENCRYPTION_KEY);
 
     // Initialize Neon connection (automatically uses NETLIFY_DATABASE_URL)
     const sql = neon();

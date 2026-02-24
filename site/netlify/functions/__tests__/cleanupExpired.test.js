@@ -16,16 +16,19 @@ describe('cleanupExpired', () => {
     mockSql.mockResolvedValueOnce([{ expired_deleted: 2, old_retrieved_deleted: 1 }]);
     const res = await handler();
     expect(res.status).toBe(200);
-    const body = JSON.parse(res.body);
+    const body = await res.json();
     expect(body.expired_deleted).toBe(2);
     expect(body.old_retrieved_deleted).toBe(1);
   });
 
   it('returns 500 when the DB throws', async () => {
     mockSql.mockRejectedValueOnce(new Error('boom'));
+    // Suppress expected console.error from error handler path
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const res = await handler();
+    spy.mockRestore();
     expect(res.status).toBe(500);
-    const body = JSON.parse(res.body);
+    const body = await res.json();
     expect(body.ok).toBe(false);
   });
 });
