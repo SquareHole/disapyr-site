@@ -14,10 +14,7 @@
   font-size: clamp(2rem, 6vw, 3rem);
   font-weight: 800;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
   letter-spacing: -0.02em;
 }
 
@@ -93,7 +90,7 @@
 
 .step { display: flex; align-items: flex-start; gap: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.5rem; }
 
-.stepNumber { background: linear-gradient(135deg, var(--primary-500), var(--primary-700)); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 6px 20px var(--shadow-lg); }
+.stepNumber { background: var(--primary-600); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 6px 20px var(--shadow-lg); }
 
 .stepContent h3 {
   font-size: 1.2rem;

@@ -55,7 +55,7 @@
   bottom: -4px;
   width: 0%;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: var(--primary);
   transition: width var(--motion-fast) ease;
 }
 
@@ -103,10 +103,7 @@
   margin: 0;
   line-height: 1.15;
   font-size: clamp(2rem, 6vw, 3rem);
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
 }
 
 .subtitle {

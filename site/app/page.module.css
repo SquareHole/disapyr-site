@@ -30,10 +30,7 @@
   font-size: clamp(2rem, 8vw, 3rem);
   font-weight: 700;
   margin: 0;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
   letter-spacing: -0.02em;
 }
 
@@ -96,7 +93,7 @@
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-4) var(--space-6);
-  background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
+  background: var(--primary-600);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
@@ -110,6 +107,7 @@
 }
 
 .button:hover {
+  background: var(--primary-700);
   transform: translateY(-1px);
   box-shadow: var(--elev-2);
 }
@@ -176,7 +174,7 @@
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+  background: var(--primary-600);
   color: white;
   padding: 1rem 1.5rem;
   border-radius: var(--radius-sm);
@@ -234,7 +232,7 @@
 
 .copyButton {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+  background: var(--primary-600);
   color: white;
   border: none;
   border-radius: var(--radius-sm);
@@ -245,7 +243,7 @@
   white-space: nowrap;
 }
 
-.copyButton:hover { background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); }
+.copyButton:hover { background: var(--primary-700); }
 
 .linkInfo {
   display: flex;
@@ -302,7 +300,7 @@
   transition: all 0.2s ease;
 }
 
-.expiryContainer:focus-within { border-color: var(--accent-600); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2); }
+.expiryContainer:focus-within { border-color: var(--primary-600); box-shadow: 0 0 0 3px var(--ring); }
 
 .expiryLabel {
   font-size: 1rem;
@@ -326,7 +324,7 @@
   transition: all 0.2s ease;
 }
 
-.expiryInput:focus { outline: none; border-color: var(--accent-600); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2); transform: scale(1.02); }
+.expiryInput:focus { outline: none; border-color: var(--primary-600); box-shadow: 0 0 0 3px var(--ring); transform: scale(1.02); }
 
 .expiryHint {
   font-size: 0.875rem;
@@ -360,13 +358,13 @@
 }
 
 .chipActive {
-  background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
+  background: var(--primary-600);
   border-color: transparent;
   color: white;
 }
 
 .chipActive:hover {
-  background: linear-gradient(135deg, var(--primary-700), var(--accent-600));
+  background: var(--primary-700);
 }
 
 /* Animations */
