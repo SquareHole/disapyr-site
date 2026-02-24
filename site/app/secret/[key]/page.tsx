@@ -47,7 +47,7 @@ export default function SecretPage() {
         }
 
         setSecretData(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load secret. Please check your connection.');
       } finally {
         setLoading(false);

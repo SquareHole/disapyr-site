@@ -94,19 +94,19 @@ export default function AboutPage() {
             <div className={styles.faq}>
               <div className={styles.faqItem}>
                 <h3>Can you read my secrets?</h3>
-                <p>No. Secrets are encrypted before storage, and we don't have access to the decryption keys in a way that would allow us to read your content.</p>
+                <p>No. Secrets are encrypted before storage, and we don&apos;t have access to the decryption keys in a way that would allow us to read your content.</p>
               </div>
               <div className={styles.faqItem}>
                 <h3>What happens if someone tries to access a secret multiple times?</h3>
-                <p>Only the first access succeeds. After that, the secret is permanently deleted and subsequent attempts will receive a "not found" error.</p>
+                <p>Only the first access succeeds. After that, the secret is permanently deleted and subsequent attempts will receive a &quot;not found&quot; error.</p>
               </div>
               <div className={styles.faqItem}>
                 <h3>Are there any logs or tracking?</h3>
-                <p>We only store metadata necessary for the service to function (creation time, expiration, access status). We don't track users or log secret content.</p>
+                <p>We only store metadata necessary for the service to function (creation time, expiration, access status). We don&apos;t track users or log secret content.</p>
               </div>
               <div className={styles.faqItem}>
                 <h3>What if I lose the link?</h3>
-                <p>Unfortunately, there's no way to recover a lost link. This is by design - we don't store any information that could be used to regenerate or find your secret.</p>
+                <p>Unfortunately, there&apos;s no way to recover a lost link. This is by design - we don&apos;t store any information that could be used to regenerate or find your secret.</p>
               </div>
             </div>
           </section>
@@ -122,12 +122,12 @@ export default function AboutPage() {
               <div className={styles.trustItem}>
                 <span className={styles.icon}>🚫</span>
                 <h3>No Tracking</h3>
-                <p>We don't use analytics, tracking cookies, or any form of user monitoring. Your privacy is paramount.</p>
+                <p>We don&apos;t use analytics, tracking cookies, or any form of user monitoring. Your privacy is paramount.</p>
               </div>
               <div className={styles.trustItem}>
                 <span className={styles.icon}>⚡</span>
                 <h3>Minimal Data</h3>
-                <p>We only store what's absolutely necessary for the service to function, and delete everything as soon as possible.</p>
+                <p>We only store what&apos;s absolutely necessary for the service to function, and delete everything as soon as possible.</p>
               </div>
             </div>
           </section>
