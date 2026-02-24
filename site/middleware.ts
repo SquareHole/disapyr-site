@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
 
   // Check if we're in development mode
   const isDevelopment = process.env.NODE_ENV === 'development';
-  (
+  const cspValue = (
       isPreview
           ? `
         default-src 'self';
@@ -53,8 +53,8 @@ export function middleware(request: NextRequest) {
     },
   });
 
-  // Also expose the nonce on the response for debugging/clients if needed
-  response.headers.set('x-nonce', nonce);
+  // Apply the CSP header to every response
+  response.headers.set('Content-Security-Policy', cspValue);
   
   return response;
 }

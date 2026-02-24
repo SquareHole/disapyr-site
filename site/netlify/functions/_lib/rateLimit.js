@@ -1,6 +1,6 @@
 import { neon } from '@netlify/neon';
 
-function getClientIp(req) {
+export function getClientIp(req) {
   try {
     const xfwd = req.headers.get('x-forwarded-for');
     if (xfwd) return xfwd.split(',')[0].trim();
