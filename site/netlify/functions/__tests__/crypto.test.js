@@ -14,12 +14,16 @@ describe('crypto helpers', () => {
 
   it('throws on tampered ciphertext/authTag', () => {
     const boxed = encryptSecret('x', key);
-    // tamper with ciphertext
-    const broken = { ...boxed, encrypted: boxed.encrypted.replace(/./, 'f') };
+    // Tamper with ciphertext: flip first hex char (f->0, anything else->f)
+    const firstChar = boxed.encrypted[0];
+    const tamperedChar = firstChar === 'f' ? '0' : 'f';
+    const broken = { ...boxed, encrypted: tamperedChar + boxed.encrypted.slice(1) };
     expect(() => decryptSecret(broken, key)).toThrow();
 
-    // tamper with authTag
-    const brokenTag = { ...boxed, authTag: boxed.authTag.replace(/./, 'f') };
+    // Tamper with authTag: flip first hex char the same way
+    const tagFirstChar = boxed.authTag[0];
+    const tamperedTagChar = tagFirstChar === 'f' ? '0' : 'f';
+    const brokenTag = { ...boxed, authTag: tamperedTagChar + boxed.authTag.slice(1) };
     expect(() => decryptSecret(brokenTag, key)).toThrow();
   });
 

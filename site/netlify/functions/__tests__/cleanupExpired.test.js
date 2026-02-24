@@ -23,7 +23,10 @@ describe('cleanupExpired', () => {
 
   it('returns 500 when the DB throws', async () => {
     mockSql.mockRejectedValueOnce(new Error('boom'));
+    // Suppress expected console.error from error handler path
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const res = await handler();
+    spy.mockRestore();
     expect(res.status).toBe(500);
     const body = await res.json();
     expect(body.ok).toBe(false);
