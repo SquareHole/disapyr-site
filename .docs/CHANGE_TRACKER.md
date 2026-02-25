@@ -34,7 +34,7 @@
 - branch: fix/csp-and-ci-tests
 - summary: Fixed Next.js CSP header injection, resolved unit testing parse failures, and added ESLint configuration to fix CI hangs.
 - scope:
-  - `site/middleware.ts` — fixed CSP generation logic to correctly assign and distribute the calculated `nonce` header to request and response headers.
+  - `site/middleware.ts` — fixed CSP generation logic to correctly assign and distribute the calculated `nonce` header to request and response headers. Conditionally implemented an `'unsafe-inline'` fallback exclusively for Netlify Deploy Previews (`isPreview` flag) to prevent Netlify's injected CDP debugging scripts from forcing an unresolvable HTML `nonce` mismatch against the strict HTTP headers.
   - `site/netlify/functions/__tests__/getSecret.test.js` — changed mock testing key to a valid UUIDv4 to pass strict validation.
   - `site/netlify/functions/__tests__/cleanupExpired.test.js` — replaced synchronous `JSON.parse(res.body)` with `await res.json()` to properly parse `ReadableStream` Web Response objects.
   - `site/netlify/functions/cleanupExpired.js` — added missing `assertEnv` import.
