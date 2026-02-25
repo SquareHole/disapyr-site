@@ -1,42 +1,50 @@
+import React from 'react';
 import Link from 'next/link';
-import LockIcon from './LockIcon';
 import styles from './Layout.module.css';
-import React from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <div className={styles.shell}>
       <header className={styles.navbar}>
         <div className={styles.navInner}>
           <Link href="/" className={styles.brand}>
-            <LockIcon className={styles.logoIcon} />
-            <span className={styles.brandText}>disapyr.link</span>
+            <svg className={styles.logoIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            disapyr.link
           </Link>
+
           <nav className={styles.navLinks} aria-label="Primary">
-            <Link href="/about" className={styles.navLink}>About</Link>
-            <a href="https://github.com/SquareHole/disapyr-site" className={styles.navLink} target="_blank" rel="noreferrer">GitHub</a>
+            <Link href="/about" className={styles.navLink}>
+              About
+            </Link>
+            <a
+              href="https://github.com/SquareHole/disapyr-site"
+              className={styles.navLink}
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
           </nav>
         </div>
       </header>
 
-      <main className={styles.main}> 
-        <div className={styles.header}>
-          <div className={styles.titleContainer}>
-            <LockIcon className={styles.logoIcon} />
-            <h1 className={styles.title}>disapyr.link</h1>
-          </div>
-          <p className={styles.subtitle}>
-            Share text securely with one‑time links that disappear after being viewed
-          </p>
-        </div>
-        <div className={styles.content}>{children}</div>
-        <footer className={styles.footer}>
-          <p>
-            Your text is encrypted and automatically deleted after being viewed once. {" "}
-            <Link href="/about" className={styles.inlineLink}>Learn more</Link>
-          </p>
-        </footer>
-      </main>
+      <div className={styles.main}>
+        {children}
+      </div>
+
+      <footer className={styles.footer}>
+        <p>
+          Your text is encrypted and automatically deleted after being viewed once. <br />
+          <Link href="/about" className={styles.inlineLink}>Read how it works</Link>
+        </p>
+      </footer>
     </div>
   );
 }

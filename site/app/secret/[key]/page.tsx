@@ -76,7 +76,7 @@ export default function SecretPage() {
           <div className={styles.main}>
             <div className={styles.loading}>
               <div className={styles.spinner}></div>
-              <p className={styles.loadingText}>Decrypting your secure link...</p>
+              <p className={styles.loadingText}>Decrypting link...</p>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function SecretPage() {
     return (
       <Layout>
         <div className={styles.container}>
-          <div className={`${styles.main} ${styles.glassCard}`}>
+          <div className={`${styles.main} ${styles.card}`}>
             <div className={styles.errorContainer}>
               <div className={styles.errorIconWrapper}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -126,7 +126,7 @@ export default function SecretPage() {
   return (
     <Layout>
       <div className={styles.container}>
-        <div className={`${styles.main} ${styles.glassCard}`}>
+        <div className={`${styles.main} ${styles.card}`}>
           <div className={styles.secretContainer}>
             <div className={styles.headerBlock}>
               <h1 className={styles.title}>
