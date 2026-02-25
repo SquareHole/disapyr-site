@@ -20,7 +20,8 @@
   --surface-hover: var(--gray-50);
 
   --foreground: var(--gray-900);
-  --muted: var(--gray-500);
+  --muted: var(--gray-600);
+  /* Darkened from gray-500 to pass WCAG AA on white/gray-50 */
 
   /* Primary Action Color - Deep Google Blue / Apple Black */
   --primary: #000000;
@@ -34,12 +35,14 @@
 
   --border: var(--gray-200);
   --input-bg: #ffffff;
-  --placeholder: var(--gray-400);
+  --placeholder: var(--gray-500);
+  /* Darkened from gray-400 to pass WCAG AA */
 
   --ring: rgba(0, 0, 0, 0.15);
 
   /* Status */
-  --success: #10b981;
+  --success: #047857;
+  /* Darkened from #10b981 to ensure white text is readable (WCAG AA) */
   --warning: #f59e0b;
   --error: #ef4444;
   --error-bg: #fef2f2;
@@ -97,7 +100,11 @@
 
     --border: var(--gray-800);
     --input-bg: var(--gray-900);
-    --placeholder: var(--gray-500);
+    --placeholder: var(--gray-400);
+    /* Lightened from gray-500 to pass WCAG AA */
+
+    --success: #10b981;
+    /* Restored to brighter green in dark mode for contrast against dark bg */
 
     --ring: rgba(255, 255, 255, 0.2);
 
