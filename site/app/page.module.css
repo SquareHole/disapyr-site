@@ -1,16 +1,19 @@
-.container {
-  min-height: 100vh;
+/* Ultra-Minimalist Home Page */
+
+.main {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: clamp(1rem, 4vw, 2rem);
 }
 
-/* Main container is now defined in Layout.module.css */
-
+/* Header Section */
 .header {
-  margin-bottom: clamp(2rem, 6vw, 3rem);
+  text-align: center;
+  margin-bottom: 3.5rem;
 }
 
 .titleContainer {
@@ -18,18 +21,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.logoIcon {
-  font-size: 2.5rem;
-  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+.titleIcon {
+  color: var(--foreground);
 }
 
 .title {
-  font-size: clamp(2rem, 8vw, 3rem);
-  font-weight: 700;
-  margin: 0;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -94,184 +93,290 @@
 
 .textarea:focus {
   outline: none;
-  border-radius: 8px;
-  color: #dc2626;
-  font-size: 0.9rem;
-  text-align: center;
+  border-color: var(--primary);
+  background: var(--background);
+  box-shadow: 0 0 0 4px var(--ring);
 }
 
-/* Expiry Selector Styles */
+/* Expiry Settings (Like Apple toggles/segmented controls) */
 .expiryContainer {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   gap: 1rem;
   background: var(--surface);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
-  box-shadow: 0 10px 30px var(--shadow);
-  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
-.expiryContainer:focus-within {
-  border-color: var(--primary-600);
-  box-shadow: 0 0 0 3px var(--ring);
+.expiryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .expiryLabel {
-  font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--foreground);
-  margin: 0;
-  white-space: nowrap;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.expiryLabel svg {
+  color: var(--muted);
 }
 
 .expiryInput {
-  width: 80px;
-  padding: 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--gray-300);
   color: var(--foreground);
-  font-size: 1rem;
-  font-family: inherit;
-  font-weight: 500;
-  text-align: center;
-  transition: all 0.2s ease;
+  font-size: 1.125rem;
+  font-weight: 600;
+  width: 60px;
+  text-align: right;
+  padding: 0.25rem;
+  transition: border-color var(--motion) ease;
+  font-family: var(--font-mono);
 }
 
 .expiryInput:focus {
   outline: none;
-  border-color: var(--primary-600);
-  box-shadow: 0 0 0 3px var(--ring);
-  transform: scale(1.02);
+  border-color: var(--primary);
 }
 
-.expiryHint {
-  font-size: 0.875rem;
-  color: var(--muted);
-  font-style: italic;
-  margin: 0;
-}
-
-/* Expiry Quick-Pick Chips */
+/* Segmented Control Chips */
 .expiryChips {
   display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--gray-100);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  margin-top: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .expiryChips {
+    background: var(--input-bg);
+  }
 }
 
 .chip {
-  padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid var(--field-border);
-  background: var(--chip-bg);
-  color: var(--foreground);
-  font-size: 0.875rem;
+  flex: 1;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+  transition: all var(--motion-fast) ease;
 }
 
 .chip:hover {
-  background: var(--chip-bg-hover);
-  transform: translateY(-1px);
+  color: var(--foreground);
 }
 
 .chipActive {
-  background: var(--primary-600);
-  border-color: transparent;
-  color: white;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
 }
 
-.chipActive:hover {
-  background: var(--primary-700);
+/* Primary Action Button - Big Pill Block */
+.button {
+  width: 100%;
+  padding: 1.25rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all var(--motion) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Result Modal Display */
+.resultBox {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.resultTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+
+.resultSubtitle {
+  color: var(--muted);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.linkBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gray-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .linkBox {
+    background: var(--input-bg);
+  }
+}
+
+.linkUrl {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--foreground);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copyButton {
+  flex-shrink: 0;
+  padding: 0.75rem 1.25rem;
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background var(--motion) ease;
+}
+
+.copyButton:hover {
+  filter: brightness(0.9);
+}
+
+.copyButton.copied {
+  background: var(--gray-800);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--motion) ease;
+  padding: 0.5rem;
+}
+
+.secondaryButton:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+.error {
+  padding: 1rem;
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-sm);
+  color: var(--error);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: center;
 }
 
 /* Animations */
-@keyframes slideUp {
-  from {
-    transform: translateX(-50%) translateY(100%);
-    opacity: 0;
-  }
-
+@keyframes spin {
   to {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
+    transform: rotate(360deg);
   }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
 
-  .titleContainer {
-    gap: 0.5rem;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .main {
+    padding: 2rem 1rem;
   }
 
-  .logoIcon {
-    font-size: 2rem;
+  .header {
+    margin-bottom: 2rem;
   }
 
-  .textarea {
-    min-height: 150px;
-    padding: 1rem;
-    font-size: 0.95rem;
-  }
-
-  .expiryContainer {
+  .linkBox {
     flex-direction: column;
-    gap: 0.75rem;
-    align-items: stretch;
-    text-align: center;
-  }
-
-  .expiryInput {
-    width: 100%;
-    max-width: 120px;
-    margin: 0 auto;
-  }
-
-  .successTitle {
-    font-size: 1.75rem;
-  }
-
-  .linkInfo {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .linkContainer {
-    flex-direction: column;
-    gap: 0.75rem;
+    padding: 0.5rem;
   }
 
   .copyButton {
     width: 100%;
   }
 
-  .toast {
-    left: 1rem;
-    right: 1rem;
-    transform: none;
-    bottom: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .textarea {
-    min-height: 120px;
-    padding: 0.875rem;
-  }
-
-  .successTitle {
-    font-size: 1.5rem;
-  }
-
-  .successSubtitle {
-    font-size: 1rem;
+  .linkUrl {
+    padding: 0.5rem;
+    text-align: center;
+    width: 100%;
   }
 }
