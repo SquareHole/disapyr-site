@@ -12,7 +12,7 @@ jest.mock('crypto', () => ({
   createDecipheriv: () => ({
     update: mockDecrypt,
     final: () => '',
-    setAuthTag: () => {},
+    setAuthTag: () => { },
   }),
 }));
 
@@ -30,7 +30,7 @@ describe('getSecret', () => {
       salt: Buffer.from('salt').toString('hex'),
     };
     mockSql.mockResolvedValueOnce([{
-      key: 'test-key',
+      key: '123e4567-e89b-12d3-a456-426614174000',
       secret: JSON.stringify(encryptedData),
       expires_at: new Date(Date.now() + 3600 * 1000).toISOString(),
       retrieved_at: null,
@@ -38,13 +38,13 @@ describe('getSecret', () => {
 
     const req = {
       method: 'GET',
-      url: 'http://localhost/.netlify/functions/getSecret?key=test-key',
+      url: 'http://localhost/.netlify/functions/getSecret?key=123e4567-e89b-12d3-a456-426614174000',
     };
     const response = await getSecret(req);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.secret).toBe('decrypted-secret');
-  expect(mockSql).toHaveBeenCalledTimes(2); // Once to get, once to soft-delete (UPDATE)
+    expect(mockSql).toHaveBeenCalledTimes(2); // Once to get, once to soft-delete (UPDATE)
   });
 });

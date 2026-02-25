@@ -1,4 +1,5 @@
 import { neon } from '@netlify/neon';
+import { assertEnv } from './_lib/assertEnv';
 
 // Netlify Scheduled Function: cleanupExpired
 // Schedule via Netlify UI or netlify.toml (cron): e.g., '0 * * * *' (hourly)

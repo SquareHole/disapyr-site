@@ -1,26 +1,39 @@
+/* Ultra-Minimalist Global Layout */
+
 .shell {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--background);
 }
 
+/* Minimalist App-like Header */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: saturate(120%) blur(10px);
-  background: var(--navbar-bg);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid var(--border);
+  transition: background-color var(--motion) ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navbar {
+    background: rgba(17, 24, 39, 0.8);
+    /* gray-900 equivalent */
+  }
 }
 
 .navInner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
-  max-width: 1100px;
+  height: 56px;
+  max-width: 1024px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
 .brand {
@@ -29,108 +42,74 @@
   gap: 0.5rem;
   color: var(--foreground);
   font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
 }
 
-.brandText {
-  letter-spacing: -0.02em;
+.logoIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--foreground);
 }
 
 .navLinks {
   display: inline-flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .navLink {
-  position: relative;
   color: var(--muted);
+  font-size: 0.9rem;
   font-weight: 500;
   transition: color var(--motion-fast) ease;
-}
-
-.navLink::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  transition: width var(--motion-fast) ease;
 }
 
 .navLink:hover {
   color: var(--foreground);
 }
 
-.navLink:hover::after {
-  width: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .navLink, .navLink::after {
-    transition: none;
-  }
-}
-
+/* Main Content Wrapper */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 4rem 1rem 3rem;
-}
-
-.header {
-  margin: 2rem 0 2.5rem;
-  text-align: center;
-}
-
-.titleContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.logoIcon {
-  width: 26px;
-  height: 26px;
-  filter: drop-shadow(0 6px 18px rgba(59, 130, 246, 0.35));
-}
-
-.title {
-  margin: 0;
-  line-height: 1.15;
-  font-size: clamp(2rem, 6vw, 3rem);
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.subtitle {
-  margin-top: 0.5rem;
-  line-height: 1.6;
-  font-size: 1.1rem;
-  color: var(--muted);
-}
-
-.content {
   width: 100%;
-  max-width: 720px;
-  padding: 0 1rem;
 }
 
+/* Footer */
 .footer {
-  margin-top: 3rem;
+  padding: 3rem 1.5rem;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--muted);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+  background: var(--background);
 }
 
 .inlineLink {
-  color: var(--primary);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  color: var(--foreground);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--muted);
+  padding-bottom: 1px;
+  transition: border-color var(--motion) ease;
+}
+
+.inlineLink:hover {
+  border-color: var(--foreground);
+}
+
+/* Utility to hide elements visually but keep them for screen readers if needed */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

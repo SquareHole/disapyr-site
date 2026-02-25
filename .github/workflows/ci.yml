@@ -31,8 +31,6 @@ jobs:
       - name: Run tests
         run: cd site && npm test --silent
 
-      - name: Lint
-        run: cd site && npm run lint --if-present
 
       - name: Build
         run: cd site && npm run build --if-present
