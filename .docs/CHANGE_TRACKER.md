@@ -28,3 +28,16 @@
 - risk: low-medium — changes add runtime checks and tests; no changes to crypto primitives or DB schema. Possible deployment failure if env is misconfigured (fail-fast behavior).
 - breaking_change: false
 - notes: Entry will be updated with the final commit SHA before merge.
+
+## 2026-02-25 — fix/csp-and-ci-tests
+- date: 2026-02-25
+- branch: fix/csp-and-ci-tests
+- summary: Fixed Next.js CSP header injection, resolved unit testing parse failures, and added ESLint configuration to fix CI hangs.
+- scope:
+  - `site/middleware.ts` — fixed CSP generation logic to correctly assign and distribute the calculated `nonce` header to request and response headers.
+  - `site/netlify/functions/__tests__/getSecret.test.js` — changed mock testing key to a valid UUIDv4 to pass strict validation.
+  - `site/netlify/functions/__tests__/cleanupExpired.test.js` — replaced synchronous `JSON.parse(res.body)` with `await res.json()` to properly parse `ReadableStream` Web Response objects.
+  - `site/netlify/functions/cleanupExpired.js` — added missing `assertEnv` import.
+  - `site/.eslintrc.json` — created a base Next.js ESLint configuration to prevent interactive CI hangs during the `next lint` phase.
+- risk: low — resolves CSP hydration issues and CI environment failures.
+- breaking_change: false
