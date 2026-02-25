@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
 
   // Check if we're in development mode
   const isDevelopment = process.env.NODE_ENV === 'development';
-  (
+  const cspHeader = (
       isPreview
           ? `
         default-src 'self';
@@ -42,10 +42,12 @@ export function middleware(request: NextRequest) {
         upgrade-insecure-requests;
       `
   ).replace(/\s{2,}/g, ' ').trim();
-// Inject nonce into the request headers so Next.js can automatically
+
+  // Inject nonce into the request headers so Next.js can automatically
   // apply it to its internal scripts/styles during rendering.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set('Content-Security-Policy', cspHeader);
 
   const response = NextResponse.next({
     request: {
@@ -55,6 +57,7 @@ export function middleware(request: NextRequest) {
 
   // Also expose the nonce on the response for debugging/clients if needed
   response.headers.set('x-nonce', nonce);
+  response.headers.set('Content-Security-Policy', cspHeader);
   
   return response;
 }
