@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <footer className={styles.footer}>
           <p>
             Your text is encrypted and automatically deleted after being viewed once. {" "}
-            <Link href="/about" className={styles.inlineLink}>Learn more</Link>
+            <Link href="/about" className={styles.inlineLink}>Learn more about how disapyr.link works</Link>
           </p>
         </footer>
       </main>
