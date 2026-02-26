@@ -1,5 +1,17 @@
 # CHANGE_TRACKER
 
+## 2026-02-26 — copilot/fix-lighthouse-issues
+- date: 2026-02-26
+- branch: copilot/fix-lighthouse-issues
+- commit: TBD
+- summary: Fix Lighthouse SEO audit failures — make "Learn more" footer link descriptive and create a valid robots.txt replacing the non-standard Content-Signal directive.
+- scope:
+  - link text (`site/app/components/Layout.tsx`)
+  - robots.txt (`site/public/robots.txt`)
+- risk: low — UI text change and static file addition; no crypto, API, or schema changes.
+- breaking_change: false
+- notes: `deprecations` and `errors-in-console` best-practices audit failures are caused by Cloudflare CDN scripts and a browser extension respectively; they are not fixable via code changes.
+
 ## 2026-01-17 — feat/env-assertion-ci-tests
 - date: 2026-01-17
 - branch: feat/env-assertion-ci-tests
